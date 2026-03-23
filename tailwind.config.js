@@ -14,8 +14,8 @@ export default {
         warning: "#F59E0B",
         background: "#020617", // slate-950
         card: "#0F172A", // slate-900
-        "text-primary": "#F8FAFC", // slate-50
-        "text-muted": "#94A3B8", // slate-400
+        "text-primary": "#FFFFFF", // Pure white for perfect dark mode contrast
+        "text-muted": "#CBD5E1", // Slate-300 for high-visibility muted text
         border: "#1E293B", // slate-800
       },
       fontFamily: {

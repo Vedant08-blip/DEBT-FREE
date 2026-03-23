@@ -21,20 +21,20 @@ export default function BarChart({ data, title }) {
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             barSize={40}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748B' }} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 13 }} />
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#64748B' }}
+              tick={{ fill: '#94A3B8', fontSize: 13 }}
               tickFormatter={(value) => `₹${value.toLocaleString('en-IN')}`}
             />
             <Tooltip 
               formatter={(value) => formatCurrency(value)}
-              cursor={{ fill: '#F8FAFC' }}
-              contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}
+              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+              contentStyle={{ backgroundColor: '#0F172A', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', color: '#F8FAFC', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)' }}
             />
-            <Legend iconType="circle" />
+            <Legend iconType="circle" wrapperStyle={{ paddingTop: '10px' }} />
             <Bar dataKey="value" name="EMI Payment" fill="#2563EB" radius={[4, 4, 0, 0]} />
           </RechartsBarChart>
         </ResponsiveContainer>

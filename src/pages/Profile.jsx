@@ -62,7 +62,7 @@ export default function Profile() {
               <select 
                 value={user.currency}
                 onChange={(e) => setUser({...user, currency: e.target.value})}
-                className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="INR">Indian Rupee (₹)</option>
                 <option value="USD">US Dollar ($)</option>
@@ -90,7 +90,7 @@ export default function Profile() {
           </form>
         </Card>
 
-        <Card className="border-danger/20 bg-red-50/50">
+        <Card className="border-danger/30 bg-danger/10">
           <h3 className="text-lg font-semibold text-danger mb-2">Danger Zone</h3>
           <p className="text-sm text-text-muted mb-6">
             Once you delete your account, there is no going back. Please be certain.

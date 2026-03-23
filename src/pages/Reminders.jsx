@@ -42,7 +42,7 @@ export default function Reminders() {
                 <select 
                   value={channel} 
                   onChange={(e) => setChannel(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="email">Email Only</option>
                   <option value="sms">SMS Only</option>
@@ -55,7 +55,7 @@ export default function Reminders() {
                 <select 
                   value={daysBefore} 
                   onChange={(e) => setDaysBefore(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="1">1 Day before EMI</option>
                   <option value="2">2 Days before EMI</option>

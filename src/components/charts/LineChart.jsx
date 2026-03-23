@@ -20,19 +20,19 @@ export default function LineChart({ data, title }) {
             data={data}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-            <XAxis dataKey="month" tick={{ fill: '#64748B' }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+            <XAxis dataKey="month" tick={{ fill: '#94A3B8', fontSize: 13 }} axisLine={false} tickLine={false} />
             <YAxis 
-              tick={{ fill: '#64748B' }} 
+              tick={{ fill: '#94A3B8', fontSize: 13 }} 
               axisLine={false} 
               tickLine={false}
               tickFormatter={(value) => `₹${value.toLocaleString('en-IN')}`}
             />
             <Tooltip 
               formatter={(value) => formatCurrency(value)}
-              contentStyle={{ borderRadius: '8px', border: '1px solid #E2E8F0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}
+              contentStyle={{ backgroundColor: '#0F172A', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', color: '#F8FAFC', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)' }}
             />
-            <Legend iconType="plainline" />
+            <Legend iconType="plainline" wrapperStyle={{ paddingTop: '10px' }} />
             <Line type="monotone" dataKey="principal" name="Remaining Balance" stroke="#2563EB" strokeWidth={3} dot={false} />
             <Line type="monotone" dataKey="interest" name="Cumulative Interest" stroke="#EF4444" strokeWidth={3} dot={false} />
           </RechartsLineChart>

@@ -98,7 +98,7 @@ export default function LoanForm({ isOpen, onClose, onSave, initialData }) {
             name="type"
             value={formData.type}
             onChange={handleChange}
-            className="flex h-10 w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="flex h-10 w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
           >
             <option value="personal">Personal Loan</option>
             <option value="home">Home Loan</option>
