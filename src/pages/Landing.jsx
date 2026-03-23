@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, PieChart, Shield, Zap, Star, LayoutDashboard, Target, TrendingDown } from 'lucide-react';
+import { ArrowRight, CheckCircle2, PieChart, Shield, Zap, Star, LayoutDashboard, Target, TrendingDown, BarChart3, Users, DollarSign, Activity } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import PageWrapper from '../components/layout/PageWrapper';
 
@@ -74,51 +75,9 @@ export default function Landing() {
                   <div className="mx-auto w-1/3 h-2 bg-slate-800 rounded-full"></div>
                 </div>
 
-                {/* App Layout Skeleton */}
-                <div className="flex h-full p-6 gap-6">
-                  {/* Sidebar Skeleton */}
-                  <div className="w-48 h-full flex flex-col gap-4">
-                    <div className="h-8 w-24 bg-white/5 rounded-lg mb-4"></div>
-                    <div className="h-6 w-full bg-primary/20 rounded-md border border-primary/30"></div>
-                    <div className="h-6 w-3/4 bg-white/5 rounded-md"></div>
-                    <div className="h-6 w-5/6 bg-white/5 rounded-md"></div>
-                    <div className="h-6 w-2/3 bg-white/5 rounded-md"></div>
-                  </div>
-
-                  {/* Main Content Skeleton */}
-                  <div className="flex-1 h-full flex flex-col gap-6">
-                    {/* Header Skeletons */}
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <div className="h-4 w-32 bg-slate-600 rounded-full mb-2"></div>
-                        <div className="h-8 w-48 bg-white/10 rounded-lg"></div>
-                      </div>
-                      <div className="h-10 w-32 bg-primary/20 rounded-xl border border-primary/30"></div>
-                    </div>
-
-                    {/* Visual Charts Skeleton */}
-                    <div className="flex-1 bg-white/5 rounded-2xl border border-white/5 p-6 flex items-end gap-3 relative overflow-hidden">
-                      {/* Decorative Graph lines */}
-                      <svg className="absolute inset-0 w-full h-full text-white/5" preserveAspectRatio="none" viewBox="0 0 100 100">
-                        <path d="M0,100 L0,50 Q25,30 50,60 T100,20 L100,100 Z" fill="currentColor" />
-                        <path d="M0,100 L0,70 Q25,50 50,80 T100,40 L100,100 Z" fill="url(#grad)" opacity="0.5" />
-                        <defs>
-                          <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#10B981" />
-                            <stop offset="100%" stopColor="transparent" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-
-                      {/* Bars */}
-                      <div className="w-1/6 bg-slate-700/50 rounded-t-md h-[40%] relative z-10 transition-all duration-1000 group-hover:h-[60%]"></div>
-                      <div className="w-1/6 bg-slate-700/50 rounded-t-md h-[55%] relative z-10 transition-all duration-1000 group-hover:h-[70%]"></div>
-                      <div className="w-1/6 bg-slate-700/50 rounded-t-md h-[30%] relative z-10 transition-all duration-1000 group-hover:h-[40%]"></div>
-                      <div className="w-1/6 bg-primary/40 rounded-t-md h-[80%] relative z-10 shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all duration-1000 group-hover:h-[90%] border-t border-primary"></div>
-                      <div className="w-1/6 bg-slate-700/50 rounded-t-md h-[50%] relative z-10 transition-all duration-1000 group-hover:h-[65%]"></div>
-                      <div className="w-1/6 bg-accent/40 rounded-t-md h-[20%] relative z-10 shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-1000 group-hover:h-[30%] border-t border-accent"></div>
-                    </div>
-                  </div>
+                {/* App Layout Skeleton (Replaced with SaaSDashboard Animation) */}
+                <div className="flex h-full p-0">
+                  <SaaSDashboard />
                 </div>
 
                 {/* Fade to transparent at the very bottom so it blends into the page */}
@@ -290,5 +249,89 @@ export default function Landing() {
 
       </div>
     </PageWrapper>
+  );
+}
+
+function SaaSDashboard() {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="flex h-full w-full text-white bg-transparent"
+    >
+
+      {/* SIDEBAR */}
+      <div className="w-52 border-r border-white/10 bg-slate-950/40 backdrop-blur-md p-5 flex flex-col gap-6">
+        <div className="text-lg font-semibold tracking-wide text-left">DebtFree</div>
+
+        <nav className="flex flex-col gap-4 text-sm text-gray-400">
+          <div className="flex items-center gap-2 hover:text-white cursor-pointer">
+            <BarChart3 size={16} /> Dashboard
+          </div>
+          <div className="flex items-center gap-2 hover:text-white cursor-pointer">
+            <Users size={16} /> Users
+          </div>
+          <div className="flex items-center gap-2 hover:text-white cursor-pointer">
+            <DollarSign size={16} /> Revenue
+          </div>
+          <div className="flex items-center gap-2 hover:text-white cursor-pointer">
+            <Activity size={16} /> Activity
+          </div>
+        </nav>
+      </div>
+
+      {/* MAIN CONTENT */}
+      <div className="flex-1 p-6 space-y-6 text-left">
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-semibold">Dashboard Overview</h1>
+
+          <div className="w-32 h-8 bg-slate-800/50 rounded-md"></div>
+        </div>
+
+        {/* STATS */}
+        <div className="grid grid-cols-3 gap-4">
+
+          {[
+            { label: "Revenue", value: "$24.5K" },
+            { label: "Users", value: "8,240" },
+            { label: "Growth", value: "+18%" }
+          ].map((card, i) => (
+            <motion.div
+              key={i}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: i * 0.2 }}
+              className="bg-slate-900/40 border border-white/5 rounded-xl p-4 backdrop-blur-xl"
+            >
+              <div className="text-sm text-gray-400">{card.label}</div>
+              <div className="text-2xl font-bold mt-1">{card.value}</div>
+            </motion.div>
+          ))}
+
+        </div>
+
+        {/* ANALYTICS GRAPH */}
+        <div className="bg-slate-900/40 border border-white/5 rounded-xl p-6 relative overflow-hidden">
+          <div className="flex justify-between mb-6 relative z-10">
+            <h2 className="text-sm text-gray-400">Traffic Analytics</h2>
+          </div>
+
+          <div className="flex items-end gap-3 h-32 relative z-10">
+            {[40, 65, 50, 85, 60, 95, 70].map((height, i) => (
+              <motion.div
+                key={i}
+                initial={{ height: 0 }}
+                animate={{ height: `${height}%` }}
+                transition={{ delay: i * 0.15 + 0.5 }}
+                className="flex-1 bg-gradient-to-t from-primary/50 to-accent/80 rounded-t-md"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
