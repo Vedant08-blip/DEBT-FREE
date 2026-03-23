@@ -32,18 +32,28 @@ export default function Modal({ isOpen, onClose, title, children, className }) {
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              className={cn("bg-card w-full max-w-lg rounded-xl shadow-xl pointer-events-auto border border-border flex flex-col max-h-[90vh]", className)}
+              className={cn("bg-card w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto border border-slate-100 flex flex-col max-h-[90vh] relative overflow-hidden", className)}
             >
-              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border">
-                <h2 className="text-xl font-semibold text-text-primary">{title}</h2>
+              {title ? (
+                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border bg-white">
+                  <h2 className="text-xl font-semibold text-text-primary">{title}</h2>
+                  <button
+                    onClick={onClose}
+                    className="rounded-full p-2 hover:bg-slate-100 transition-colors text-text-muted hover:text-text-primary"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              ) : (
                 <button
                   onClick={onClose}
-                  className="rounded-full p-1 hover:bg-slate-100 transition-colors text-text-muted hover:text-text-primary"
+                  className="absolute top-4 right-4 z-50 rounded-full p-2 bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors text-white hover:text-white shadow-sm ring-1 ring-white/40 shadow-black/10"
                 >
                   <X className="h-5 w-5" />
                 </button>
-              </div>
-              <div className="p-4 sm:p-6 overflow-y-auto">
+              )}
+              
+              <div className={cn("overflow-y-auto w-full", title ? "p-4 sm:p-6" : "")}>
                 {children}
               </div>
             </motion.div>
