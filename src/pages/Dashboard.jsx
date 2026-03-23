@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import PageWrapper from '../components/layout/PageWrapper';
 import LoanSummary from '../components/loans/LoanSummary';
 import DonutChart from '../components/charts/DonutChart';
@@ -47,33 +48,53 @@ export default function Dashboard() {
 
   return (
     <PageWrapper isProtected={true}>
-      <div className="flex justify-between items-center mb-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex justify-between items-center mb-6"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-text-primary">Dashboard</h1>
-          <p className="text-text-muted mt-1">Welcome back! Here's your financial overview.</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Mission Control</h1>
+          <p className="text-slate-400 mt-1">Welcome back. Here's your financial overview.</p>
         </div>
         <Link to="/loans">
-          <Button className="hidden sm:flex gap-2">
+          <Button className="hidden sm:flex gap-2 bg-blue-600 hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.3)]">
             <Plus className="w-4 h-4" /> Add Loan
           </Button>
         </Link>
-      </div>
+      </motion.div>
 
-      <div className="mb-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="mb-8"
+      >
         <LoanSummary 
           totalDebt={totalDebt}
           monthlyEMI={monthlyEMI}
           loansCount={loans.length}
           debtFreeDate={formattedDate}
         />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
+      >
         <DonutChart data={donutData} title="Debt Breakdown" />
         <BarChart data={barData} title="Monthly EMI Breakdown" />
-      </div>
+      </motion.div>
 
-      <Card className="w-full">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <Card className="w-full glass-card border-white/5 bg-slate-900/40 backdrop-blur-2xl">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-semibold text-text-primary">Recent Loans</h3>
           <Link to="/loans" className="text-sm font-medium text-primary hover:text-secondary transition-colors">
@@ -110,7 +131,8 @@ export default function Dashboard() {
             </tbody>
           </table>
         </div>
-      </Card>
+        </Card>
+      </motion.div>
     </PageWrapper>
   );
 }

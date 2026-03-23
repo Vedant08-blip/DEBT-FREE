@@ -35,13 +35,13 @@ export default function Sidebar() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium",
+                  "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-sm font-medium",
                   isActive 
-                    ? "bg-primary/10 text-primary" 
-                    : "text-text-muted hover:bg-white/5 hover:text-white"
+                    ? "bg-blue-500/15 text-blue-400 border border-blue-500/20 shadow-[0_0_15px_rgba(37,99,235,0.1)]" 
+                    : "text-slate-400 hover:bg-white/5 hover:text-white border border-transparent"
                 )}
               >
-                <Icon className={cn("w-5 h-5", isActive ? "text-primary" : "text-text-muted")} />
+                <Icon className={cn("w-5 h-5", isActive ? "text-blue-400" : "text-slate-400")} />
                 {item.name}
               </Link>
             );
@@ -61,11 +61,16 @@ export default function Sidebar() {
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "flex flex-col items-center justify-center p-2 rounded-lg gap-1",
-                  isActive ? "text-primary" : "text-text-muted"
+                  "flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300",
+                  isActive ? "text-blue-400 bg-blue-500/10" : "text-slate-400 hover:text-white"
                 )}
               >
-                <Icon className={cn("w-5 h-5", isActive && "fill-primary/20")} />
+                <div className={cn(
+                  "p-1.5 rounded-lg transition-all",
+                  isActive ? "bg-blue-500/20 shadow-[0_0_10px_rgba(37,99,235,0.2)]" : "bg-transparent"
+                )}>
+                  <Icon className="w-5 h-5" />
+                </div>
                 <span className="text-[10px] font-medium">{item.name}</span>
               </Link>
             );

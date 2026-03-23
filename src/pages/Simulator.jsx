@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import PageWrapper from '../components/layout/PageWrapper';
 import Card from '../components/ui/Card';
 import Slider from '../components/ui/Slider';
@@ -22,15 +23,25 @@ export default function Simulator() {
 
   return (
     <PageWrapper isProtected={true}>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">Payment Simulator</h1>
-        <p className="text-text-muted mt-1">See how small extra payments make a massive difference.</p>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8"
+      >
+        <h1 className="text-3xl font-bold text-white tracking-tight">Time Machine Simulator</h1>
+        <p className="text-slate-400 mt-1">See how small extra payments bend your financial timeline.</p>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
-          <Card className="border-border">
-            <h3 className="text-lg font-semibold text-text-primary mb-4">Extra Monthly Payment</h3>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 hover:border-white/20 transition-colors">
+              <h3 className="text-lg font-semibold text-white mb-4">Extra Firepower</h3>
             <Slider 
               value={extraPayment}
               onChange={(e) => setExtraPayment(Number(e.target.value))}
@@ -40,8 +51,15 @@ export default function Simulator() {
               label="Amount to add (₹)"
             />
           </Card>
+          </motion.div>
 
-          <Card className="bg-gradient-to-br from-primary to-secondary text-white border-0">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+          <Card className="bg-gradient-to-br from-blue-600/20 to-indigo-600/10 backdrop-blur-xl border border-blue-500/30 text-white relative overflow-hidden shadow-[0_0_30px_rgba(37,99,235,0.15)]">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
             <h3 className="text-lg font-semibold mb-6">Your Accelerated Results</h3>
             <div className="grid grid-cols-2 gap-6">
               <div>
@@ -57,18 +75,24 @@ export default function Simulator() {
                 </p>
               </div>
               <div className="col-span-2 pt-4 border-t border-white/20">
-                <p className="text-white/80 text-sm mb-1">New Debt Free Date</p>
-                <p className="text-xl font-semibold">
+                <p className="text-blue-200/80 text-xs font-semibold uppercase tracking-widest mb-1">New Debt Free Date</p>
+                <p className="text-2xl font-bold text-white">
                   {new Date(new Date().setMonth(new Date().getMonth() + Math.round(newMonths))).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
                 </p>
               </div>
             </div>
           </Card>
+          </motion.div>
         </div>
 
-        <div className="h-96">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="h-96"
+        >
           <BarChart data={chartData} title="Total Interest Comparison" />
-        </div>
+        </motion.div>
       </div>
     </PageWrapper>
   );
