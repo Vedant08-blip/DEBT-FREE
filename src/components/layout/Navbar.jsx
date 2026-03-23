@@ -75,15 +75,17 @@ export default function Navbar() {
                 <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">DebtFree</span>
               </Link>
             </div>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsLoginOpen(true)}
-                className="text-sm font-medium text-text-muted hover:text-text-primary transition-colors"
-              >
-
-              </button>
-              <button onClick={() => setIsSignupOpen(true)}>
-                <Button size="sm">Log In</Button>
+            <div className="flex items-center gap-6">
+              <div className="hidden md:flex items-center gap-6 mr-2">
+                <a href="/#how-it-works" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
+                  Services
+                </a>
+                <Link to="/about" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
+                  About Us
+                </Link>
+              </div>
+              <button onClick={() => setIsLoginOpen(true)}>
+                <Button size="sm" className="hidden sm:flex shadow-md shadow-primary/20">Log In</Button>
               </button>
             </div>
           </div>
