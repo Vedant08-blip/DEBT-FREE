@@ -1,6 +1,6 @@
 import React from 'react';
 import PageWrapper from '../components/layout/PageWrapper';
-import { Target, TrendingDown, ShieldCheck, Zap, Layers, Snowflake, Sparkles } from 'lucide-react';
+import { Target, TrendingDown, ShieldCheck, Zap, Layers, Snowflake, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '../components/ui/Button';
 
