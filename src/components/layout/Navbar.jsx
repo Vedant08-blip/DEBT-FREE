@@ -8,9 +8,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">D</span>
-              </div>
+              <img src="/logo.png" alt="DebtFree" className="w-8 h-8 object-contain" />
               <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">DebtFree</span>
             </Link>
           </div>
