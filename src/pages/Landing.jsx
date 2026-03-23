@@ -194,7 +194,7 @@ export default function Landing() {
                   { text: "DebtFree's dashboard became my morning routine. Watching my payoff date get closer is addicting!", author: "Sarah L." },
                   { text: "I cleared my education loan a whole year early thanks to the amortization schedules here.", author: "Rohan K." }
                 ].map((t, i) => (
-                  <div key={i} className="w-[320px] md:w-[380px] shrink-0 bg-slate-900 border border-white/5 p-6 sm:p-8 rounded-2xl shadow-xl hover:bg-slate-800 transition-colors cursor-default text-left">
+                  <div key={i} className="w-[320px] md:w-[380px] shrink-0 bg-slate-900 border border-white/5 p-6 sm:p-8 rounded-2xl shadow-xl hover:bg-slate-800 transition-colors cursor-default text-left whitespace-normal">
                     <div className="flex gap-1 mb-5">
                       {[1, 2, 3, 4, 5].map(star => <Star key={star} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                     </div>
@@ -216,7 +216,7 @@ export default function Landing() {
                   { text: "DebtFree's dashboard became my morning routine. Watching my payoff date get closer is addicting!", author: "Sarah L." },
                   { text: "I cleared my education loan a whole year early thanks to the amortization schedules here.", author: "Rohan K." }
                 ].map((t, i) => (
-                  <div key={i} className="w-[320px] md:w-[380px] shrink-0 bg-slate-900 border border-white/5 p-6 sm:p-8 rounded-2xl shadow-xl hover:bg-slate-800 transition-colors cursor-default text-left">
+                  <div key={i} className="w-[320px] md:w-[380px] shrink-0 bg-slate-900 border border-white/5 p-6 sm:p-8 rounded-2xl shadow-xl hover:bg-slate-800 transition-colors cursor-default text-left whitespace-normal">
                     <div className="flex gap-1 mb-5">
                       {[1, 2, 3, 4, 5].map(star => <Star key={star} className="w-4 h-4 text-amber-400 fill-amber-400" />)}
                     </div>
