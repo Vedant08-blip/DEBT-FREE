@@ -20,9 +20,7 @@ export default function Sidebar() {
       <aside className="hidden md:flex flex-col w-64 h-screen bg-card border-r border-border fixed left-0 top-0">
         <div className="p-6">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">D</span>
-            </div>
+            <img src="/logo.png" alt="DebtFree" className="w-8 h-8 object-contain" />
             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">DebtFree</span>
           </Link>
         </div>
