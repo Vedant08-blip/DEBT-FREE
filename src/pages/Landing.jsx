@@ -17,16 +17,26 @@ export default function Landing() {
           and simulate extra payments to become debt-free faster.
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link to="/register">
-            <Button size="lg" className="w-full sm:w-auto text-lg px-8">
-              Start for Free <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </Link>
-          <Link to="/login">
-            <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8">
-              Login to Dashboard
-            </Button>
-          </Link>
+          {localStorage.getItem('isAuthenticated') === 'true' ? (
+            <Link to="/dashboard">
+              <Button size="lg" className="w-full sm:w-auto text-lg px-8 shadow-lg shadow-primary/20">
+                Go to Dashboard <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link to="/register">
+                <Button size="lg" className="w-full sm:w-auto text-lg px-8 shadow-lg shadow-primary/20">
+                  Start for Free <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8">
+                  Log in
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -104,9 +114,15 @@ export default function Landing() {
               </div>
             </div>
             <div className="mt-10">
-              <Link to="/register">
-                <Button size="lg" className="px-8 shadow-lg shadow-primary/30">Create Free Account</Button>
-              </Link>
+              {localStorage.getItem('isAuthenticated') === 'true' ? (
+                <Link to="/dashboard">
+                  <Button size="lg" className="px-8 shadow-lg shadow-primary/30">Go to Dashboard</Button>
+                </Link>
+              ) : (
+                <Link to="/register">
+                  <Button size="lg" className="px-8 shadow-lg shadow-primary/30">Create Free Account</Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
