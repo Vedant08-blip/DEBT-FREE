@@ -17,7 +17,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 h-screen bg-card border-r border-border fixed left-0 top-0">
+      <aside className="hidden md:flex flex-col w-64 h-screen bg-slate-950/40 backdrop-blur-2xl border-r border-white/5 fixed left-0 top-0 z-40 shadow-2xl">
         <div className="p-6">
           <Link to="/dashboard" className="flex items-center gap-2">
             <img src="/logo.png" alt="DebtFree" className="w-8 h-8 object-contain" />
@@ -38,7 +38,7 @@ export default function Sidebar() {
                   "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium",
                   isActive 
                     ? "bg-primary/10 text-primary" 
-                    : "text-text-muted hover:bg-slate-50 hover:text-text-primary"
+                    : "text-text-muted hover:bg-white/5 hover:text-white"
                 )}
               >
                 <Icon className={cn("w-5 h-5", isActive ? "text-primary" : "text-text-muted")} />
@@ -50,7 +50,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 px-2 py-2 pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950/60 backdrop-blur-2xl border-t border-white/10 z-50 px-2 py-2 pb-safe">
         <div className="flex items-center justify-around">
           {navItems.slice(0, 5).map((item) => {
             const isActive = location.pathname === item.path;
