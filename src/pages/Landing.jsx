@@ -101,19 +101,44 @@ export default function Landing() {
       {/* Testimonials */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-primary/5 rounded-3xl p-8 md:p-12 text-center border border-primary/10">
-            <h2 className="text-3xl font-bold text-text-primary mb-8">Ready to change your financial future?</h2>
-            <div className="flex flex-col md:flex-row justify-center items-center gap-4 text-left max-w-3xl mx-auto">
-              <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-border">
-                <p className="text-text-muted italic mb-4">"This tool helped me realize I could be debt free 3 years earlier just by adding ₹2,000 extra to my home loan EMI."</p>
-                <p className="font-semibold text-text-primary">- Rahul S.</p>
+          <div className="bg-primary/5 rounded-3xl p-8 md:p-12 text-center border border-primary/10 overflow-hidden">
+            <h2 className="text-3xl font-bold text-text-primary mb-10">Trusted by thousands</h2>
+            
+            <div className="relative flex overflow-hidden w-full group py-4 -mx-4">
+              <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[rgba(240,244,255,1)] to-transparent z-10 pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[rgba(240,244,255,1)] to-transparent z-10 pointer-events-none"></div>
+              
+              <div className="flex animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused] min-w-full shrink-0 items-center justify-around gap-6 px-3">
+                {[
+                  { text: "This tool helped me realize I could be debt free 3 years earlier just by adding ₹2,000 extra to my home loan EMI.", author: "- Rahul S." },
+                  { text: "The visual comparison between Avalanche and Snowball made it so easy to pick the right strategy for my 4 credit cards.", author: "- Priya M." },
+                  { text: "Finally an app that doesn't force me to link my bank account. The privacy is unmatched.", author: "- Amit T." },
+                  { text: "DebtFree's dashboard became my morning routine. Watching my payoff date get closer is addicting!", author: "- Sarah L." },
+                  { text: "I cleared my education loan a whole year early thanks to the amortization schedules here.", author: "- Rohan K." }
+                ].map((t, i) => (
+                  <div key={i} className="w-[300px] md:w-[350px] shrink-0 bg-white p-6 rounded-2xl shadow-sm border border-border whitespace-normal text-left">
+                    <p className="text-text-muted italic mb-4 text-sm leading-relaxed min-h-[5rem]">"{t.text}"</p>
+                    <p className="font-semibold text-text-primary text-sm">{t.author}</p>
+                  </div>
+                ))}
               </div>
-              <div className="flex-1 bg-white p-6 rounded-2xl shadow-sm border border-border">
-                <p className="text-text-muted italic mb-4">"The visual comparison between Avalanche and Snowball made it so easy to pick the right strategy for my 4 credit cards."</p>
-                <p className="font-semibold text-text-primary">- Priya M.</p>
+              <div className="flex animate-marquee whitespace-nowrap group-hover:[animation-play-state:paused] min-w-full shrink-0 items-center justify-around gap-6 px-3" aria-hidden="true">
+                {[
+                  { text: "This tool helped me realize I could be debt free 3 years earlier just by adding ₹2,000 extra to my home loan EMI.", author: "- Rahul S." },
+                  { text: "The visual comparison between Avalanche and Snowball made it so easy to pick the right strategy for my 4 credit cards.", author: "- Priya M." },
+                  { text: "Finally an app that doesn't force me to link my bank account. The privacy is unmatched.", author: "- Amit T." },
+                  { text: "DebtFree's dashboard became my morning routine. Watching my payoff date get closer is addicting!", author: "- Sarah L." },
+                  { text: "I cleared my education loan a whole year early thanks to the amortization schedules here.", author: "- Rohan K." }
+                ].map((t, i) => (
+                  <div key={i} className="w-[300px] md:w-[350px] shrink-0 bg-white p-6 rounded-2xl shadow-sm border border-border whitespace-normal text-left">
+                    <p className="text-text-muted italic mb-4 text-sm leading-relaxed min-h-[5rem]">"{t.text}"</p>
+                    <p className="font-semibold text-text-primary text-sm">{t.author}</p>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="mt-10">
+
+            <div className="mt-12">
               {localStorage.getItem('isAuthenticated') === 'true' ? (
                 <Link to="/dashboard">
                   <Button size="lg" className="px-8 shadow-lg shadow-primary/30">Go to Dashboard</Button>
