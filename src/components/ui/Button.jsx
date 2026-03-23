@@ -18,8 +18,8 @@ const Button = forwardRef(({
     secondary: "bg-secondary text-white hover:bg-primary focus:ring-secondary",
     accent: "bg-accent text-white hover:bg-emerald-600 focus:ring-accent",
     danger: "bg-danger text-white hover:bg-red-600 focus:ring-danger",
-    outline: "border-2 border-border bg-transparent hover:bg-slate-50 text-text-primary focus:ring-slate-400",
-    ghost: "bg-transparent hover:bg-slate-100 text-text-primary focus:ring-slate-400"
+    outline: "border-2 border-border bg-transparent hover:bg-white/5 text-text-primary focus:ring-slate-400",
+    ghost: "bg-transparent hover:bg-white/5 text-text-primary focus:ring-slate-400"
   };
 
   const sizes = {

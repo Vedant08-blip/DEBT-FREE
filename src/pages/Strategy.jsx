@@ -78,16 +78,16 @@ export default function Strategy() {
           <p className="text-sm text-text-muted mb-6">Pays off highest interest rate loans first.</p>
           
           <div className="space-y-4">
-            <div className="bg-slate-50 p-4 rounded-lg">
+            <div className="bg-slate-800/50 p-4 rounded-lg">
               <p className="text-sm text-text-muted mb-1">Total Interest Saved</p>
               <p className="text-2xl font-bold text-accent">{formatCurrency(avalancheInterestSaved)}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="bg-slate-800/50 p-4 rounded-lg">
                 <p className="text-sm text-text-muted mb-1">New Payoff Time</p>
                 <p className="text-lg font-semibold text-text-primary">{Math.floor(avalancheMonths/12)}y {avalancheMonths%12}m</p>
               </div>
-              <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="bg-slate-800/50 p-4 rounded-lg">
                 <p className="text-sm text-text-muted mb-1">Time Saved</p>
                 <p className="text-lg font-semibold text-primary">{monthsSaved} Months</p>
               </div>
@@ -106,16 +106,16 @@ export default function Strategy() {
           <p className="text-sm text-text-muted mb-6">Pays off smallest balances first for quick wins.</p>
           
           <div className="space-y-4">
-            <div className="bg-slate-50 p-4 rounded-lg">
+            <div className="bg-slate-800/50 p-4 rounded-lg">
               <p className="text-sm text-text-muted mb-1">Total Interest Saved</p>
               <p className="text-2xl font-bold text-accent">{formatCurrency(snowballInterestSaved)}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="bg-slate-800/50 p-4 rounded-lg">
                 <p className="text-sm text-text-muted mb-1">New Payoff Time</p>
                 <p className="text-lg font-semibold text-text-primary">{Math.floor(snowballMonths/12)}y {snowballMonths%12}m</p>
               </div>
-              <div className="bg-slate-50 p-4 rounded-lg">
+              <div className="bg-slate-800/50 p-4 rounded-lg">
                 <p className="text-sm text-text-muted mb-1">Time Saved</p>
                 <p className="text-lg font-semibold text-primary">{Math.max(0, monthsSaved - 5)} Months</p>
               </div>

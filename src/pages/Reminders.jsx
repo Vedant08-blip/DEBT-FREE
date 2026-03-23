@@ -70,7 +70,7 @@ export default function Reminders() {
               <h4 className="font-medium text-text-primary mb-4">Per Loan Settings</h4>
               <div className="space-y-3">
                 {dummyLoans.map(loan => (
-                  <div key={loan.id} className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-border">
+                  <div key={loan.id} className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-border">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
                         {loan.emiDate}

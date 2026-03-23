@@ -7,16 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#2563EB",
-        secondary: "#1E40AF",
+        primary: "#3B82F6", // Lighter blue for dark mode
+        secondary: "#1D4ED8",
         accent: "#10B981",
         danger: "#EF4444",
         warning: "#F59E0B",
-        background: "#F8FAFC",
-        card: "#FFFFFF",
-        "text-primary": "#1E293B",
-        "text-muted": "#64748B",
-        border: "#E2E8F0",
+        background: "#020617", // slate-950
+        card: "#0F172A", // slate-900
+        "text-primary": "#F8FAFC", // slate-50
+        "text-muted": "#94A3B8", // slate-400
+        border: "#1E293B", // slate-800
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

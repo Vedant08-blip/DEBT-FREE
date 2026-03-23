@@ -108,7 +108,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="px-8 py-8 bg-white">
+        <div className="px-8 py-8 bg-card border-t border-border">
           <form onSubmit={handleLoginSubmit} className="space-y-5">
             <Input
               label="Email Address"
@@ -149,7 +149,7 @@ export default function Navbar() {
 
           <div className="mt-8 text-center text-sm text-text-muted relative">
             <div className="absolute inset-x-0 top-1/2 h-px bg-border -z-10"></div>
-            <span className="bg-white px-4 text-slate-400">Don't have an account?</span>
+            <span className="bg-card px-4 text-text-muted">Don't have an account?</span>
           </div>
           <div className="mt-6 text-center">
             <button
@@ -182,7 +182,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="px-8 py-8 bg-white">
+        <div className="px-8 py-8 bg-card border-t border-border">
           <form onSubmit={handleSignupSubmit} className="space-y-4">
             <Input
               label="Full Name"
@@ -243,7 +243,7 @@ export default function Navbar() {
 
           <div className="mt-8 text-center text-sm text-text-muted relative">
             <div className="absolute inset-x-0 top-1/2 h-px bg-border -z-10"></div>
-            <span className="bg-white px-4 text-slate-400">Already have an account?</span>
+            <span className="bg-card px-4 text-text-muted">Already have an account?</span>
           </div>
           <div className="mt-6 text-center">
             <button
