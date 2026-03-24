@@ -548,18 +548,18 @@ export default function Landing() {
               {steps.map((step, i) => (
                 <div
                   key={i}
-                  className={`relative group pre-anim ${howInView ? 'in-view' : ''}`}
+                  className={`relative group pre-anim h-full flex flex-col ${howInView ? 'in-view' : ''}`}
                   style={{ transitionDelay: `${i * 120}ms` }}
                 >
-                  <div className="relative mb-8">
+                  <div className="relative mb-8 shrink-0">
                     <div className="w-20 h-20 bg-slate-900 border border-white/8 text-white rounded-2xl flex items-center justify-center text-3xl font-extrabold shadow-2xl relative z-10 group-hover:-translate-y-2 transition-transform duration-300">
                       <div className={`absolute inset-0 ${step.glow} blur-xl rounded-2xl -z-10 transition-colors duration-500`} />
                       {step.num}
                     </div>
                   </div>
-                  <div className="glass-card rounded-2xl p-7 hover:border-blue-500/30 transition-all duration-300">
+                  <div className="glass-card rounded-2xl p-7 hover:border-blue-500/30 transition-all duration-300 flex flex-col flex-1">
                     <h3 className="text-2xl font-bold mb-4 text-white">{step.title}</h3>
-                    <p className="text-slate-400 leading-relaxed">{step.desc}</p>
+                    <p className="text-slate-400 leading-relaxed grow">{step.desc}</p>
                   </div>
                 </div>
               ))}
@@ -594,15 +594,15 @@ export default function Landing() {
                   {testimonials.map((t, i) => (
                     <div
                       key={i}
-                      className="w-[340px] md:w-[400px] shrink-0 glass-card rounded-2xl p-7 cursor-default whitespace-normal hover:border-blue-500/25 transition-all duration-300"
+                      className="w-[340px] md:w-[400px] shrink-0 glass-card rounded-2xl p-7 cursor-default whitespace-normal hover:border-blue-500/25 transition-all duration-300 h-full flex flex-col"
                     >
-                      <div className="flex gap-1 mb-4">
+                      <div className="flex gap-1 mb-4 shrink-0">
                         {[1, 2, 3, 4, 5].map(star => (
                           <Star key={star} className="w-4 h-4 text-amber-400 fill-amber-400" />
                         ))}
                       </div>
-                      <p className="text-slate-300 italic mb-6 text-sm leading-relaxed min-h-[4.5rem]">"{t.text}"</p>
-                      <div className="flex items-center gap-3">
+                      <p className="text-slate-300 italic mb-6 text-sm leading-relaxed grow min-h-[4.5rem]">"{t.text}"</p>
+                      <div className="flex items-center gap-3 shrink-0 mt-auto">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center border border-blue-500/30">
                           <span className="text-white font-bold text-sm">{t.author.charAt(0)}{t.author.split(' ')[1]?.charAt(0)}</span>
                         </div>
