@@ -9,6 +9,10 @@ import Strategy from './pages/Strategy';
 import Simulator from './pages/Simulator';
 import Reminders from './pages/Reminders';
 import Profile from './pages/Profile';
+import Contact from './pages/Contact';
+import Careers from './pages/Careers';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 // Simple Protected Route wrapper checking local storage
 const ProtectedRoute = ({ children }) => {
@@ -36,6 +40,10 @@ export default function App() {
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/careers" element={<Careers />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/login" element={
           <PublicOnlyRoute>
             <Login />
