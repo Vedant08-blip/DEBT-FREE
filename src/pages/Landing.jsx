@@ -282,7 +282,7 @@ export default function Landing() {
   return (
     <PageWrapper isProtected={false}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;700&display=swap');
         .land-root { font-family: 'DM Sans', sans-serif; }
         .land-root h1, .land-root h2, .land-root h3, .land-root h4 { font-family: 'Syne', sans-serif; }
 
@@ -348,7 +348,7 @@ export default function Landing() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-emerald-600/5 blur-[100px] pointer-events-none" />
 
           {/* Rotating rings */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-dashed border-blue-500/8 animate-rotate pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] rounded-full border border-dashed border-blue-500/8 animate-rotate pointer-events-none" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-dashed border-indigo-500/6 animate-rotate pointer-events-none" style={{ animationDirection: 'reverse', animationDuration: '18s' }} />
 
           {/* Grid */}
@@ -374,7 +374,7 @@ export default function Landing() {
               className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[0.95] mb-8"
             >
               Destroy your debt,<br />
-              <span className="gradient-text">accelerate your freedom.</span>
+              <span className="gradient-text">Accelerate your freedom.</span>
             </motion.h1>
 
             <motion.p
@@ -454,10 +454,10 @@ export default function Landing() {
           <div className="absolute inset-0 hex-grid opacity-60" />
           <div className="max-w-6xl mx-auto px-6 relative z-10">
             <div className={`grid grid-cols-2 md:grid-cols-4 gap-10 pre-anim ${statsInView ? 'in-view' : ''}`}>
-              <StatCard value={54}    suffix="L+"  label="Total Debt Tracked"  color="text-blue-400"    inView={statsInView} />
-              <StatCard value={11333} suffix="+"   label="GitHub Forks"        color="text-indigo-400"  inView={statsInView} />
-              <StatCard value={3}     suffix=" yrs" label="Avg Years Saved"    color="text-emerald-400" inView={statsInView} />
-              <StatCard value={100}   suffix="%"   label="Privacy First"       color="text-amber-400"   inView={statsInView} />
+              <StatCard value={54} suffix="L+" label="Total Debt Tracked" color="text-blue-400" inView={statsInView} />
+              <StatCard value={11333} suffix="+" label="GitHub Forks" color="text-indigo-400" inView={statsInView} />
+              <StatCard value={3} suffix=" yrs" label="Avg Years Saved" color="text-emerald-400" inView={statsInView} />
+              <StatCard value={100} suffix="%" label="Privacy First" color="text-amber-400" inView={statsInView} />
             </div>
           </div>
         </section>
@@ -597,7 +597,7 @@ export default function Landing() {
                       className="w-[340px] md:w-[400px] shrink-0 glass-card rounded-2xl p-7 cursor-default whitespace-normal hover:border-blue-500/25 transition-all duration-300"
                     >
                       <div className="flex gap-1 mb-4">
-                        {[1,2,3,4,5].map(star => (
+                        {[1, 2, 3, 4, 5].map(star => (
                           <Star key={star} className="w-4 h-4 text-amber-400 fill-amber-400" />
                         ))}
                       </div>
