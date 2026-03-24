@@ -77,11 +77,11 @@ export default function Navbar() {
             </div>
             <div className="flex items-center gap-6">
               <div className="hidden md:flex items-center gap-6 mr-2">
-                <a href="/#how-it-works" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
-                  Services
-                </a>
                 <Link to="/about" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
                   About Us
+                </Link>
+                <Link to="/contact" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
+                  Contact
                 </Link>
               </div>
               <button onClick={() => setIsLoginOpen(true)}>
