@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import Button from '../components/ui/Button';
 import PageWrapper from '../components/layout/PageWrapper';
+import ParticleCanvas from '../components/ui/ParticleCanvas';
 
 /* ─────────────────────────────────────────
    Intersection Observer hook
@@ -45,42 +46,7 @@ function useCounter(end, duration = 2000, start = false) {
 /* ─────────────────────────────────────────
    Particle Canvas
 ───────────────────────────────────────── */
-function ParticleCanvas() {
-  const canvasRef = useRef(null);
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let W = canvas.width = canvas.offsetWidth;
-    let H = canvas.height = canvas.offsetHeight;
-    const particles = Array.from({ length: 80 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.8 + 0.3,
-      dx: (Math.random() - 0.5) * 0.25,
-      dy: (Math.random() - 0.5) * 0.25,
-      alpha: Math.random() * 0.4 + 0.05,
-    }));
-    let raf;
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H);
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(96,165,250,${p.alpha})`;
-        ctx.fill();
-        p.x += p.dx; p.y += p.dy;
-        if (p.x < 0 || p.x > W) p.dx *= -1;
-        if (p.y < 0 || p.y > H) p.dy *= -1;
-      });
-      raf = requestAnimationFrame(draw);
-    };
-    draw();
-    const onResize = () => { W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; };
-    window.addEventListener('resize', onResize);
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', onResize); };
-  }, []);
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-30" />;
-}
+
 
 /* ─────────────────────────────────────────
    Stat Card
@@ -243,27 +209,7 @@ export default function Landing() {
 
   const isAuth = typeof window !== 'undefined' && localStorage.getItem('isAuthenticated') === 'true';
 
-  const features = [
-    {
-      icon: LayoutDashboard, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20',
-      title: 'Command Center Dashboard',
-      desc: 'Get a master view of your entire financial landscape. Total balances, monthly obligations, and your exact debt-free date — all in one place.',
-      span: 'md:col-span-2 md:row-span-2',
-      large: true,
-    },
-    {
-      icon: Zap, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20',
-      title: 'Payoff Architect',
-      desc: 'Toggle between Snowball and Avalanche math to find your ultimate victory path.',
-      span: 'md:col-span-1',
-    },
-    {
-      icon: Shield, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20',
-      title: 'Air-Gapped Privacy',
-      desc: 'Zero bank connections. Zero tracking. Your data is yours, forever.',
-      span: 'md:col-span-1',
-    },
-  ];
+
 
   const steps = [
     { num: '1', title: 'Map Your Debt', desc: 'Input your balances, interest rates, and minimum payments into our secure interface in minutes.', glow: 'bg-blue-500/20 group-hover:bg-blue-500/40' },
