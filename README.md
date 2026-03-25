@@ -1,16 +1,58 @@
-# React + Vite
+# DEBT-FREE 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Track, manage, and achieve debt freedom strategically.**  
+A modern web app to help you monitor loans, simulate payoff strategies, visualize progress, and stay on track.
 
-Currently, two official plugins are available:
+![Hero Image](src/assets/hero.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- **Loan Management**: Add, edit, track multiple loans with EMI calculations
+- **Debt Simulator**: Test payoff strategies (snowball, avalanche)
+- **Interactive Charts**: Progress rings, bar/line charts for debt overview
+- **Dashboard & Analytics**: Real-time summaries, reminders
+- **Responsive UI**: Modern Tailwind components, glitch effects, particles
+- **Pages**: Dashboard, My Loans, Simulator, Strategy, Profile, Landing, Login/Register
+- **Utilities**: EMI calculator, currency formatting, reminders
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend**: React 18 + Vite
+- **Styling**: Tailwind CSS + Custom UI (Buttons, Modals, Charts, etc.)
+- **Charts**: Custom Chart components (Bar, Line, Donut, ProgressRing)
+- **Build**: PostCSS, ESLint
+- **License**: MIT
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Quick Start
+
+1. Clone/Fork the repo
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run development server:
+   ```bash
+   npm run dev
+   ```
+4. Open [http://localhost:5173](http://localhost:5173)
+
+## 📁 Project Structure
+
+```
+src/
+├── components/     # Reusable UI & domain components
+├── pages/          # Page components (Dashboard, Simulator, etc.)
+├── utils/          # Helpers (EMI calc, formatting)
+├── data/           # Dummy data
+└── assets/         # Images & icons
+```
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## 👨‍💻 Developed by
+
+**Vedant Trivedi**
+
+[![GitHub](https://img.shields.io/badge/GitHub-VedantTrivedi-black?logo=github)](https://github.com/VedantTrivedi)
