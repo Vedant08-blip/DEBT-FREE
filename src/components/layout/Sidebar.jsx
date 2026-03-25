@@ -52,7 +52,7 @@ export default function Sidebar() {
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950/60 backdrop-blur-2xl border-t border-white/10 z-50 px-2 py-2 pb-safe">
         <div className="flex items-center justify-around">
-          {navItems.slice(0, 5).map((item) => {
+          {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
             
@@ -66,12 +66,12 @@ export default function Sidebar() {
                 )}
               >
                 <div className={cn(
-                  "p-1.5 rounded-lg transition-all",
+                  "p-1 rounded-lg transition-all",
                   isActive ? "bg-blue-500/20 shadow-[0_0_10px_rgba(37,99,235,0.2)]" : "bg-transparent"
                 )}>
                   <Icon className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-medium">{item.name}</span>
+                <span className="text-[9px] font-medium">{item.name}</span>
               </Link>
             );
           })}

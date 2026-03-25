@@ -23,6 +23,12 @@
   .border-border {
     border-color: rgba(255, 255, 255, 0.1) !important;
   }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
 }
 
 /* Custom Scrollbar */

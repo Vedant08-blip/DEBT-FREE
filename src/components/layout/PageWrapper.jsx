@@ -25,8 +25,8 @@ export default function PageWrapper({ children, isProtected = false }) {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-dashed border-blue-500/5 pointer-events-none" style={{ animation: 'spin 40s linear infinite' }} />
 
         <Sidebar />
-        <main className="flex-1 overflow-y-auto pb-16 md:pb-0 md:ml-64 relative z-10">
-          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto min-h-full">
+        <main className="flex-1 overflow-y-auto pb-24 md:pb-0 md:ml-64 relative z-10 w-full overflow-x-hidden">
+          <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto min-h-[calc(100vh-64px)] md:min-h-full">
             {children}
           </div>
         </main>

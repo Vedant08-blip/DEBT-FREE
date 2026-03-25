@@ -74,8 +74,8 @@ function SaaSDashboard() {
       transition={{ duration: 0.8 }}
       className="flex h-full w-full text-white bg-transparent"
     >
-      {/* SIDEBAR */}
-      <div className="w-48 border-r border-white/5 bg-slate-950/60 backdrop-blur-md p-5 flex flex-col gap-6">
+      {/* SIDEBAR - hidden on small mockup screens */}
+      <div className="hidden lg:flex w-48 border-r border-white/5 bg-slate-950/60 backdrop-blur-md p-5 flex-col gap-6">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
             <TrendingDown className="w-3 h-3 text-white" />
@@ -100,17 +100,30 @@ function SaaSDashboard() {
         </div>
       </div>
 
+      {/* MOBILE MINI SIDEBAR - visible on small mockup but hidden on large */}
+      <div className="flex lg:hidden w-12 border-r border-white/5 bg-slate-950/60 backdrop-blur-md p-2 flex-col items-center gap-6">
+        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+          <TrendingDown className="w-3 h-3 text-white" />
+        </div>
+        <div className="flex flex-col gap-4 text-slate-500">
+          <BarChart3 size={14} className="text-blue-400" />
+          <Target size={14} />
+          <Zap size={14} />
+          <Activity size={14} />
+        </div>
+      </div>
+
       {/* MAIN */}
-      <div className="flex-1 p-5 space-y-4 text-left overflow-hidden">
+      <div className="flex-1 p-3 md:p-5 space-y-3 md:space-y-4 text-left overflow-hidden">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-sm font-bold text-white">Debt Overview</h1>
-            <p className="text-xs text-slate-500">March 2025</p>
+            <h1 className="text-[10px] md:text-sm font-bold text-white uppercase tracking-wider">Debt Overview</h1>
+            <p className="text-[8px] md:text-xs text-slate-500">March 2025</p>
           </div>
-          <div className="flex gap-2">
-            <div className="w-20 h-6 bg-slate-800/50 rounded-lg border border-white/5"></div>
-            <div className="w-6 h-6 bg-blue-500/20 rounded-lg border border-blue-500/20 flex items-center justify-center">
-              <Sparkles className="w-3 h-3 text-blue-400" />
+          <div className="flex gap-1.5 md:gap-2">
+            <div className="w-12 md:w-20 h-5 md:h-6 bg-slate-800/50 rounded-lg border border-white/5"></div>
+            <div className="w-5 md:w-6 h-5 md:h-6 bg-blue-500/20 rounded-lg border border-blue-500/20 flex items-center justify-center">
+              <Sparkles className="w-2.5 md:w-3 h-2.5 md:h-3 text-blue-400" />
             </div>
           </div>
         </div>
@@ -317,7 +330,7 @@ export default function Landing() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[0.95] mb-8"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1] md:leading-[0.95] mb-8"
             >
               Destroy your debt,<br />
               <span className="gradient-text">Accelerate your freedom.</span>
@@ -367,23 +380,22 @@ export default function Landing() {
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className="relative max-w-5xl mx-auto hidden md:block group"
+              className="relative max-w-5xl mx-auto block group px-0 sm:px-4"
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-blue-600/20 to-indigo-600/5 rounded-t-3xl blur-[60px] -z-10 group-hover:from-blue-600/30 transition-all duration-700" />
-              <div className="relative rounded-t-2xl bg-slate-900/80 backdrop-blur-2xl border border-white/8 shadow-2xl overflow-hidden aspect-[21/9] group-hover:-translate-y-2 transition-transform duration-700 ring-1 ring-white/5">
+              <div className="absolute inset-0 bg-gradient-to-b from-blue-600/20 to-indigo-600/5 rounded-t-3xl blur-[40px] md:blur-[60px] -z-10 group-hover:from-blue-600/30 transition-all duration-700" />
+              <div className="relative rounded-t-xl md:rounded-t-2xl bg-slate-900/80 backdrop-blur-2xl border border-white/8 shadow-2xl overflow-hidden aspect-[4/3] sm:aspect-[16/10] md:aspect-[21/9] group-hover:-translate-y-1 md:group-hover:-translate-y-2 transition-transform duration-700 ring-1 ring-white/5">
                 {/* OSX Toolbar */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-slate-950/90 border-b border-white/5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/40" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/40" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/40" />
-                  <div className="mx-auto w-1/3 h-5 bg-slate-800/60 rounded-lg border border-white/5 flex items-center justify-center">
-                    <span className="text-[9px] text-slate-500">debtfree.app/dashboard</span>
+                <div className="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 md:py-3 bg-slate-950/90 border-b border-white/5">
+                  <div className="w-2.5 md:w-3 h-2.5 md:h-3 rounded-full bg-red-500/40" />
+                  <div className="w-2.5 md:w-3 h-2.5 md:h-3 rounded-full bg-amber-500/40" />
+                  <div className="w-2.5 md:w-3 h-2.5 md:h-3 rounded-full bg-emerald-500/40" />
+                  <div className="mx-auto w-1/2 md:w-1/3 h-4 md:h-5 bg-slate-800/60 rounded-lg border border-white/5 flex items-center justify-center">
+                    <span className="text-[7px] md:text-[9px] text-slate-500">debtfree.app/dashboard</span>
                   </div>
                 </div>
                 <div className="flex h-full p-0">
                   <SaaSDashboard />
                 </div>
-                <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#020617] to-transparent pointer-events-none" />
               </div>
             </motion.div>
           </div>
@@ -423,30 +435,30 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
               {/* Large card */}
-              <div className={`md:col-span-2 md:row-span-2 relative glass-card rounded-[2rem] p-10 overflow-hidden group bento-large cursor-default pre-anim ${featInView ? 'in-view' : ''}`} style={{ transitionDelay: '50ms' }}>
+              <div className={`col-span-1 sm:col-span-2 lg:row-span-2 relative glass-card rounded-[2rem] p-6 md:p-10 overflow-hidden group bento-large cursor-default pre-anim ${featInView ? 'in-view' : ''}`} style={{ transitionDelay: '50ms' }}>
                 <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-500/15 rounded-full blur-[80px] bento-glow pointer-events-none" />
                 <div className="animate-shimmer absolute inset-0 rounded-[2rem] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8 border border-blue-500/20 shadow-[0_0_20px_rgba(37,99,235,0.2)] animate-float">
-                    <LayoutDashboard className="w-8 h-8 text-blue-400" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 md:mb-8 border border-blue-500/20 shadow-[0_0_20px_rgba(37,99,235,0.2)] animate-float">
+                    <LayoutDashboard className="w-6 h-6 md:w-8 md:h-8 text-blue-400" />
                   </div>
-                  <h3 className="text-3xl font-bold text-white mb-4">Command Center Dashboard</h3>
-                  <p className="text-slate-400 text-lg max-w-lg leading-relaxed">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Command Center Dashboard</h3>
+                  <p className="text-slate-400 text-base md:text-lg max-w-lg leading-relaxed">
                     Get a master view of your entire financial landscape. Total balances, monthly obligations,
                     and an exact calendar visualization of your debt-free date — all mapped out in front of you.
                   </p>
-                  <div className="mt-8 flex gap-3">
+                  <div className="mt-6 md:mt-8 flex flex-wrap gap-2 md:gap-3">
                     {['Real-time', 'Visual', 'Actionable'].map((tag, i) => (
-                      <span key={i} className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold">{tag}</span>
+                      <span key={i} className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-[10px] md:text-xs font-semibold">{tag}</span>
                     ))}
                   </div>
                 </div>
               </div>
 
               {/* Strategy card */}
-              <div className={`md:col-span-1 relative glass-card rounded-[2rem] p-8 overflow-hidden group cursor-default pre-anim ${featInView ? 'in-view' : ''}`} style={{ transitionDelay: '150ms' }}>
+              <div className={`col-span-1 relative glass-card rounded-[2rem] p-8 overflow-hidden group cursor-default pre-anim ${featInView ? 'in-view' : ''}`} style={{ transitionDelay: '150ms' }}>
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-[50px] group-hover:bg-emerald-500/20 transition-all duration-700 pointer-events-none" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 border border-emerald-500/20">
@@ -458,7 +470,7 @@ export default function Landing() {
               </div>
 
               {/* Privacy card */}
-              <div className={`md:col-span-1 relative glass-card rounded-[2rem] p-8 overflow-hidden group cursor-default pre-anim ${featInView ? 'in-view' : ''}`} style={{ transitionDelay: '250ms' }}>
+              <div className={`col-span-1 relative glass-card rounded-[2rem] p-8 overflow-hidden group cursor-default pre-anim ${featInView ? 'in-view' : ''}`} style={{ transitionDelay: '250ms' }}>
                 <div className="absolute -left-10 -top-10 w-40 h-40 bg-amber-500/10 rounded-full blur-[50px] group-hover:bg-amber-500/20 transition-all duration-700 pointer-events-none" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 bg-amber-500/10 rounded-xl flex items-center justify-center mb-6 border border-amber-500/20">

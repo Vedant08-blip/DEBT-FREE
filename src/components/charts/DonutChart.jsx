@@ -23,8 +23,8 @@ export default function DonutChart({ data, title }) {
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={80}
-              outerRadius={100}
+              innerRadius={window.innerWidth < 640 ? 60 : 80}
+              outerRadius={window.innerWidth < 640 ? 80 : 100}
               paddingAngle={5}
               dataKey="value"
               nameKey="name"

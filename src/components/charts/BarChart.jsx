@@ -18,8 +18,8 @@ export default function BarChart({ data, title }) {
         <ResponsiveContainer width="100%" height="100%">
           <RechartsBarChart
             data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            barSize={40}
+            margin={{ top: 20, right: 10, left: -10, bottom: 5 }}
+            barSize={window.innerWidth < 640 ? 25 : 40}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94A3B8', fontSize: 13 }} />

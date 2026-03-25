@@ -61,7 +61,7 @@ export default function Simulator() {
           <Card className="bg-gradient-to-br from-blue-600/20 to-indigo-600/10 backdrop-blur-xl border border-blue-500/30 text-white relative overflow-hidden shadow-[0_0_30px_rgba(37,99,235,0.15)]">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
             <h3 className="text-lg font-semibold mb-6">Your Accelerated Results</h3>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-6">
               <div>
                 <p className="text-white/80 text-sm mb-1">Time Saved</p>
                 <p className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-emerald-200">

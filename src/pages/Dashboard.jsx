@@ -52,14 +52,14 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center mb-6"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
       >
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Mission Control</h1>
-          <p className="text-slate-400 mt-1">Welcome back. Here's your financial overview.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Mission Control</h1>
+          <p className="text-slate-400 mt-1 text-sm">Welcome back. Here's your financial overview.</p>
         </div>
-        <Link to="/loans">
-          <Button className="hidden sm:flex gap-2 bg-blue-600 hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+        <Link to="/loans" className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto flex justify-center gap-2 bg-blue-600 hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.3)]">
             <Plus className="w-4 h-4" /> Add Loan
           </Button>
         </Link>
