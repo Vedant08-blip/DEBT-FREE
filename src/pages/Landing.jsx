@@ -532,10 +532,10 @@ export default function Landing() {
           <div className="max-w-7xl mx-auto px-6 relative z-10">
             <div className={`text-center mb-16 pre-anim ${testInView ? 'in-view' : ''}`}>
               <p className="text-xs font-bold text-indigo-400 uppercase tracking-[0.3em] mb-4">Social Proof</p>
-              <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+              <h2 className="text-3xl md:text-4xl lg:text-6xl font-extrabold tracking-tight mb-4">
                 Loved by <span className="gradient-text">thousands</span>
               </h2>
-              <p className="text-slate-400 text-xl">Real stories from real people who took control.</p>
+              <p className="text-slate-400 text-lg md:text-xl">Real stories from real people who took control.</p>
             </div>
 
             {/* Marquee */}

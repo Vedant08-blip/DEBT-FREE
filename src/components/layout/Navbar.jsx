@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Menu, X } from 'lucide-react';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 import Input from '../ui/Input';
@@ -10,6 +10,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Form States
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -75,7 +76,8 @@ export default function Navbar() {
                 <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">DebtFree</span>
               </Link>
             </div>
-            <div className="flex items-center gap-6">
+            
+            <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-6 mr-2">
                 <Link to="/about" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
                   About Us
@@ -84,12 +86,65 @@ export default function Navbar() {
                   Contact
                 </Link>
               </div>
-              <button onClick={() => setIsLoginOpen(true)}>
-                <Button size="sm" className="hidden sm:flex shadow-md shadow-primary/20">Log In</Button>
+              
+              <div className="hidden sm:flex items-center gap-3">
+                <button onClick={() => setIsLoginOpen(true)}>
+                  <Button size="sm" className="shadow-md shadow-primary/20">Log In</Button>
+                </button>
+              </div>
+
+              {/* Mobile Menu Toggle */}
+              <button 
+                className="md:hidden p-2 text-slate-400 hover:text-white transition-colors"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-slate-900/95 backdrop-blur-3xl border-b border-white/10 py-6 px-4 space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="flex flex-col gap-4">
+              <Link 
+                to="/about" 
+                className="text-lg font-medium text-slate-300 hover:text-white px-2 py-1"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About Us
+              </Link>
+              <Link 
+                to="/contact" 
+                className="text-lg font-medium text-slate-300 hover:text-white px-2 py-1"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <div className="pt-4 flex flex-col gap-3">
+                <button 
+                  onClick={() => {
+                    setIsLoginOpen(true);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-3 rounded-xl border border-white/10 font-bold text-slate-300 bg-white/5"
+                >
+                  Log In
+                </button>
+                <button 
+                  onClick={() => {
+                    setIsSignupOpen(true);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20"
+                >
+                  Join DebtFree
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Login Modal */}
