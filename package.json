@@ -5,11 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
     "server": "nodemon backend/server.js",
-    "backend-dev": "nodemon backend/server.js"
+    "backend": "nodemon backend/server.js",
+    "start": "concurrently \"npm run dev\" \"npm run server\"",
+    "dev:full": "npx concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
