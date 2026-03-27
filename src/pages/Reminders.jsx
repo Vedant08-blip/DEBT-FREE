@@ -6,11 +6,10 @@ import Button from '../components/ui/Button';
 import { loanAPI, authAPI } from '../utils/api';
 import { toast } from 'react-hot-toast';
 
-export default function Reminders() {
+const Reminders = () => {
   const [loans, setLoans] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [globalEnabled, setGlobalEnabled] = useState(true);
-  const [channel, setChannel] = useState('both');
   const [daysBefore, setDaysBefore] = useState('3');
   const [loanToggles, setLoanToggles] = useState({});
 
@@ -20,7 +19,6 @@ export default function Reminders() {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if (userInfo && userInfo.reminderSettings) {
           setGlobalEnabled(userInfo.reminderSettings.globalEnabled);
-          setChannel(userInfo.reminderSettings.channel);
           setDaysBefore(userInfo.reminderSettings.daysBefore.toString());
         }
 
@@ -45,7 +43,6 @@ export default function Reminders() {
       // 1. Save global settings
       const updatedUser = await authAPI.updateReminders({
         globalEnabled,
-        channel,
         daysBefore: Number(daysBefore)
       });
       
@@ -74,6 +71,18 @@ export default function Reminders() {
     }
   };
 
+  const handleTest = async () => {
+    try {
+      const res = await authAPI.testReminder();
+      toast.success(res.message, { 
+        duration: 4000,
+        icon: '🔔'
+      });
+    } catch (err) {
+      toast.error(err.message || 'Failed to send test notification');
+    }
+  };
+
   if (isLoading) {
     return (
       <PageWrapper isProtected={true}>
@@ -86,9 +95,18 @@ export default function Reminders() {
 
   return (
     <PageWrapper isProtected={true}>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Payment Reminders</h1>
-        <p className="text-slate-400 mt-1">Configure automated SMS and Email alerts for your EMIs.</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Payment Reminders</h1>
+          <p className="text-slate-400 mt-1">Configure automated SMS and Email alerts for your EMIs.</p>
+        </div>
+        <Button 
+          onClick={handleTest} 
+          variant="outline"
+          className="w-full sm:w-auto border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+        >
+          Send Test Notification
+        </Button>
       </div>
 
       <div className="max-w-3xl space-y-6">
@@ -102,34 +120,23 @@ export default function Reminders() {
           </div>
 
           <div className={`space-y-6 transition-opacity ${globalEnabled ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Delivery Channel</label>
-                <select 
-                  value={channel} 
-                  onChange={(e) => setChannel(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="email">Email Only</option>
-                  <option value="sms">SMS Only</option>
-                  <option value="both">Email & SMS</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Lead Time</label>
-                <select 
-                  value={daysBefore} 
-                  onChange={(e) => setDaysBefore(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="1">1 Day before EMI</option>
-                  <option value="2">2 Days before EMI</option>
-                  <option value="3">3 Days before EMI</option>
-                  <option value="5">5 Days before EMI</option>
-                  <option value="7">1 Week before EMI</option>
-                </select>
-              </div>
+            <div className="max-w-md">
+              <label className="block text-sm font-medium text-slate-300 mb-2">Notification Lead Time</label>
+              <select 
+                value={daysBefore} 
+                onChange={(e) => setDaysBefore(e.target.value)}
+                className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+              >
+                <option value="1">1 Day before EMI</option>
+                <option value="2">2 Days before EMI</option>
+                <option value="3">3 Days before EMI</option>
+                <option value="5">5 Days before EMI</option>
+                <option value="7">1 Week before EMI</option>
+              </select>
+              <p className="text-[10px] text-slate-500 mt-1.5 flex items-center gap-1.5 px-1">
+                <span className="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></span>
+                Real-time email alerts will be sent to your registered address.
+              </p>
             </div>
 
             <div>
@@ -169,4 +176,6 @@ export default function Reminders() {
       </div>
     </PageWrapper>
   );
-}
+};
+
+export default Reminders;

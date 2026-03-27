@@ -91,4 +91,75 @@ const updateReminderSettings = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, registerUser, getUsers, updateReminderSettings };
+// @desc    Send a test reminder notification
+// @route   POST /api/auth/test-reminder
+// @access  Private
+const testReminder = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const { channel, daysBefore } = user.reminderSettings;
+  
+  // Create a mock loan for the test
+  const mockLoan = {
+    name: "Test Loan (Demo)",
+    emiAmount: 5000,
+    emiDate: (new Date().getDate() + daysBefore) % 31 || 31
+  };
+
+  console.log(`\n--- [ACTION] TEST NOTIFICATION TRIGGERED ---`);
+  console.log(`User: ${user.name} (${user.email})`);
+  
+  if (channel === 'email' || channel === 'both') {
+    const textContent = `Hi ${user.name},\n\nThis is a test payment reminder from DebtFree. Your EMI for "${mockLoan.name}" in the amount of ₹${mockLoan.emiAmount} is scheduled for payment on the ${mockLoan.emiDate}th.\n\nWarm regards,\nTeam DebtFree\nVedant Trivedi`;
+    
+    // Check if real email is configured
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      const nodemailer = await import('nodemailer');
+      const transporter = nodemailer.default.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"DebtFree" <${process.env.EMAIL_USER}>`,
+        to: user.email,
+        subject: `🛡️ Payment Reminder: Your ${mockLoan.name} EMI is approaching`,
+        text: textContent,
+        html: `
+          <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+            <h2 style="color: #2563eb;">🛡️ Test Notification</h2>
+            <p>Hi <strong>${user.name}</strong>,</p>
+            <p>This is a test payment reminder from your <strong>DebtFree Dashboard</strong>.</p>
+            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 5px 0;"><strong>Loan:</strong> ${mockLoan.name}</p>
+              <p style="margin: 5px 0;"><strong>Amount:</strong> ₹${mockLoan.emiAmount.toLocaleString('en-IN')}</p>
+              <p style="margin: 5px 0;"><strong>Due Date:</strong> ${mockLoan.emiDate}th of this month</p>
+            </div>
+            <p>You have <strong>${daysBefore} days</strong> remaining. Keep your momentum towards financial freedom!</p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;" />
+            <p style="font-size: 14px; color: #666;">Warm regards,<br /><strong>Team DebtFree</strong><br />Vedant Trivedi</p>
+          </div>
+        `
+      });
+      console.log(`✅ [SUCCESS] Real Test Email sent to ${user.email}`);
+    } else {
+      console.log(`📧 MOCK TEST EMAIL`);
+      console.log(`To: ${user.email}`);
+      console.log(`Subject: 🛡️ Payment Reminder: Your ${mockLoan.name} EMI is approaching`);
+      console.log(`---`);
+      console.log(textContent);
+      console.log(`---\n`);
+    }
+  }
+
+  res.json({ message: 'Test notification sent! Check your server terminal.' });
+});
+
+export { authUser, registerUser, getUsers, updateReminderSettings, testReminder };

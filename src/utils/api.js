@@ -39,6 +39,7 @@ export const authAPI = {
   register: (userData) => apiCall('/auth/register', 'POST', userData),
   getUsers: () => apiCall('/auth/users'),
   updateReminders: (settings) => apiCall('/auth/reminders', 'PUT', settings),
+  testReminder: () => apiCall('/auth/test-reminder', 'POST'),
 };
 
 export const loanAPI = {

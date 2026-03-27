@@ -23,7 +23,6 @@ const userSchema = mongoose.Schema(
     },
     reminderSettings: {
       globalEnabled: { type: Boolean, default: true },
-      channel: { type: String, enum: ['email', 'sms', 'both'], default: 'both' },
       daysBefore: { type: Number, default: 3 },
     },
   },
