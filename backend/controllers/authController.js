@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
+import sendEmail from '../utils/sendEmail.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/auth/login
@@ -101,34 +102,15 @@ const testReminder = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  const { channel, daysBefore } = user.reminderSettings;
-  
-  // Create a mock loan for the test
-  const mockLoan = {
-    name: "Test Loan (Demo)",
-    emiAmount: 5000,
-    emiDate: (new Date().getDate() + daysBefore) % 31 || 31
-  };
-
   console.log(`\n--- [ACTION] TEST NOTIFICATION TRIGGERED ---`);
   console.log(`User: ${user.name} (${user.email})`);
   
-  if (channel === 'email' || channel === 'both') {
-    const textContent = `Hi ${user.name},\n\nThis is a test payment reminder from DebtFree. Your EMI for "${mockLoan.name}" in the amount of ₹${mockLoan.emiAmount} is scheduled for payment on the ${mockLoan.emiDate}th.\n\nWarm regards,\nTeam DebtFree\nVedant Trivedi`;
-    
-    // Check if real email is configured
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      const nodemailer = await import('nodemailer');
-      const transporter = nodemailer.default.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: `"DebtFree" <${process.env.EMAIL_USER}>`,
+  const textContent = `Hi ${user.name},\n\nThis is a test payment reminder from DebtFree. Your EMI for "${mockLoan.name}" in the amount of ₹${mockLoan.emiAmount} is scheduled for payment on the ${mockLoan.emiDate}th.\n\nWarm regards,\nTeam DebtFree\nVedant Trivedi`;
+  
+  // Check if real email is configured
+  if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    try {
+      await sendEmail({
         to: user.email,
         subject: `🛡️ Payment Reminder: Your ${mockLoan.name} EMI is approaching`,
         text: textContent,
@@ -149,17 +131,21 @@ const testReminder = asyncHandler(async (req, res) => {
         `
       });
       console.log(`✅ [SUCCESS] Real Test Email sent to ${user.email}`);
-    } else {
-      console.log(`📧 MOCK TEST EMAIL`);
-      console.log(`To: ${user.email}`);
-      console.log(`Subject: 🛡️ Payment Reminder: Your ${mockLoan.name} EMI is approaching`);
-      console.log(`---`);
-      console.log(textContent);
-      console.log(`---\n`);
+    } catch (err) {
+      console.error(`❌ [ERROR] Failed to send TEST email to ${user.email}:`, err.message);
+      res.status(500);
+      throw new Error(`Email delivery failed: ${err.message}`);
     }
+  } else {
+    console.log(`📧 MOCK TEST EMAIL`);
+    console.log(`To: ${user.email}`);
+    console.log(`Subject: 🛡️ Payment Reminder: Your ${mockLoan.name} EMI is approaching`);
+    console.log(`---`);
+    console.log(textContent);
+    console.log(`---\n`);
   }
 
-  res.json({ message: 'Test notification sent! Check your server terminal.' });
+  res.json({ message: 'Test notification sent! Check your server terminal/inbox.' });
 });
 
 export { authUser, registerUser, getUsers, updateReminderSettings, testReminder };
