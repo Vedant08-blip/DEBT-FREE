@@ -17,6 +17,7 @@ export default function Navbar() {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [loginErrors, setLoginErrors] = useState({});
+  const [signupErrors, setSignupErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
