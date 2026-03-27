@@ -13,10 +13,11 @@ import Contact from './pages/Contact';
 import Careers from './pages/Careers';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import AdminDashboard from './pages/AdminDashboard';
 
 // Simple Protected Route wrapper checking local storage
 const ProtectedRoute = ({ children }) => {
-  const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+  const isAuth = !!localStorage.getItem('userInfo');
   // If not authenticated, redirect to login
   if (!isAuth) {
     return <Navigate to="/login" replace />;
@@ -24,9 +25,18 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const AdminRoute = ({ children }) => {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  const isAdmin = userInfo && userInfo.isAdmin;
+  if (!isAdmin) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
 // Check if user is already logged in, so we don't show them login page again
 const PublicOnlyRoute = ({ children }) => {
-  const isAuth = localStorage.getItem('isAuthenticated') === 'true';
+  const isAuth = !!localStorage.getItem('userInfo');
   if (isAuth) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -84,6 +94,13 @@ export default function App() {
         <Route path="/profile" element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
           </ProtectedRoute>
         } />
         

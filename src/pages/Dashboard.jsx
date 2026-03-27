@@ -8,21 +8,23 @@ import BarChart from '../components/charts/BarChart';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { formatCurrency } from '../utils/formatCurrency';
-import { dummyLoans } from '../data/dummy';
+import { loanAPI } from '../utils/api';
 import { Plus } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function Dashboard() {
   const [loans, setLoans] = useState([]);
   
   useEffect(() => {
-    // In a real app, fetch from API. We use local dummy data.
-    const stored = localStorage.getItem('debtfree_loans');
-    if (stored) {
-      setLoans(JSON.parse(stored));
-    } else {
-      setLoans(dummyLoans);
-      localStorage.setItem('debtfree_loans', JSON.stringify(dummyLoans));
-    }
+    const fetchLoans = async () => {
+      try {
+        const data = await loanAPI.getLoans();
+        setLoans(data);
+      } catch (err) {
+        toast.error(err.message || 'Failed to fetch loans');
+      }
+    };
+    fetchLoans();
   }, []);
 
   const totalDebt = loans.reduce((acc, loan) => acc + loan.outstanding, 0);
@@ -114,7 +116,7 @@ export default function Dashboard() {
             </thead>
             <tbody>
               {loans.slice(0, 4).map(loan => (
-                <tr key={loan.id} className="border-b border-border/50 last:border-0">
+                <tr key={loan._id || loan.id} className="border-b border-border/50 last:border-0">
                   <td className="py-4 font-medium text-text-primary">{loan.name}</td>
                   <td className="py-4 text-danger font-semibold">{formatCurrency(loan.outstanding)}</td>
                   <td className="py-4 text-text-primary hidden sm:table-cell">{loan.interestRate}%</td>

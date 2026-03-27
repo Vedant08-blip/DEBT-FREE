@@ -14,7 +14,7 @@ export default function LoanList({ loans, onEdit, onDelete }) {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {loans.map(loan => (
         <LoanCard 
-          key={loan.id} 
+          key={loan._id || loan.id} 
           loan={loan} 
           onEdit={onEdit} 
           onDelete={onDelete} 

@@ -5,7 +5,7 @@ import LoanList from '../components/loans/LoanList';
 import LoanForm from '../components/loans/LoanForm';
 import Button from '../components/ui/Button';
 import { Plus } from 'lucide-react';
-import { dummyLoans } from '../data/dummy';
+import { loanAPI } from '../utils/api';
 import { toast } from 'react-hot-toast';
 
 export default function MyLoans() {
@@ -14,19 +14,18 @@ export default function MyLoans() {
   const [editingLoan, setEditingLoan] = useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem('debtfree_loans');
-    if (stored) {
-      setLoans(JSON.parse(stored));
-    } else {
-      setLoans(dummyLoans);
-      localStorage.setItem('debtfree_loans', JSON.stringify(dummyLoans));
-    }
+    fetchLoans();
   }, []);
 
-  const saveLoans = (newLoans) => {
-    setLoans(newLoans);
-    localStorage.setItem('debtfree_loans', JSON.stringify(newLoans));
+  const fetchLoans = async () => {
+    try {
+      const data = await loanAPI.getLoans();
+      setLoans(data);
+    } catch (err) {
+      toast.error(err.message || 'Failed to fetch loans');
+    }
   };
+
 
   const handleOpenAdd = () => {
     setEditingLoan(null);
@@ -38,23 +37,33 @@ export default function MyLoans() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this loan?")) {
-      const updated = loans.filter(l => l.id !== id);
-      saveLoans(updated);
-      toast.success('Loan deleted completely');
+      try {
+        await loanAPI.deleteLoan(id);
+        setLoans(loans.filter(l => (l._id || l.id) !== id));
+        toast.success('Loan deleted completely');
+      } catch (err) {
+        toast.error(err.message || 'Failed to delete loan');
+      }
     }
   };
 
-  const handleSaveLoan = (loanData) => {
-    if (editingLoan) {
-      const updated = loans.map(l => l.id === editingLoan.id ? { ...loanData, id: editingLoan.id } : l);
-      saveLoans(updated);
-      toast.success('Loan updated successfully');
-    } else {
-      const newLoan = { ...loanData, id: Date.now() };
-      saveLoans([...loans, newLoan]);
-      toast.success('Loan added successfully');
+  const handleSaveLoan = async (loanData) => {
+    try {
+      if (editingLoan) {
+        const id = editingLoan._id || editingLoan.id;
+        const updated = await loanAPI.updateLoan(id, loanData);
+        setLoans(loans.map(l => (l._id || l.id) === id ? updated : l));
+        toast.success('Loan updated successfully');
+      } else {
+        const newLoan = await loanAPI.createLoan(loanData);
+        setLoans([...loans, newLoan]);
+        toast.success('Loan added successfully');
+      }
+      setIsModalOpen(false);
+    } catch (err) {
+      toast.error(err.message || 'Failed to save loan');
     }
   };
 

@@ -5,6 +5,7 @@ import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { toast } from 'react-hot-toast';
+import { authAPI } from '../utils/api';
 
 import { motion } from 'framer-motion';
 import ParticleCanvas from '../components/ui/ParticleCanvas';
@@ -15,7 +16,7 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!formData.name) newErrors.name = 'Full name is required';
@@ -31,13 +32,18 @@ export default function Register() {
     }
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const { name, email, password } = formData;
+      const data = await authAPI.register({ name, email, password });
+      localStorage.setItem('userInfo', JSON.stringify(data));
       setIsLoading(false);
       toast.success('Account created successfully!');
-      localStorage.setItem('isAuthenticated', 'true');
       navigate('/dashboard');
-    }, 1000);
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(err.message || 'Failed to register');
+      setErrors({ server: err.message });
+    }
   };
 
   return (

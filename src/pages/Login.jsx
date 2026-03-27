@@ -5,6 +5,7 @@ import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import { toast } from 'react-hot-toast';
+import { authAPI } from '../utils/api';
 
 import { motion } from 'framer-motion';
 import ParticleCanvas from '../components/ui/ParticleCanvas';
@@ -15,7 +16,7 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!formData.email) newErrors.email = 'Email is required';
@@ -27,14 +28,17 @@ export default function Login() {
     }
 
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const data = await authAPI.login(formData);
+      localStorage.setItem('userInfo', JSON.stringify(data));
       setIsLoading(false);
       toast.success('Successfully logged in!');
-      // Assuming a fake auth for now, we just redirect
-      localStorage.setItem('isAuthenticated', 'true');
       navigate('/dashboard');
-    }, 1000);
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(err.message || 'Failed to login');
+      setErrors({ server: err.message });
+    }
   };
 
   return (

@@ -24,7 +24,7 @@ export default function LoanCard({ loan, onEdit, onDelete }) {
             <Edit className="w-4 h-4" />
           </button>
           <button 
-            onClick={() => onDelete(loan.id)} 
+            onClick={() => onDelete(loan._id || loan.id)} 
             className="p-1.5 text-text-muted hover:text-danger transition-colors rounded-lg hover:bg-red-50"
           >
             <Trash2 className="w-4 h-4" />

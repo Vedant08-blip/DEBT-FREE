@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageWrapper from '../components/layout/PageWrapper';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
@@ -8,7 +8,14 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [user, setUser] = useState({ name: 'Vedant Trivedi', phone: '+91 9876543210', currency: 'INR' });
+  const [user, setUser] = useState({ name: '', email: '', phone: '', currency: 'INR' });
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo) {
+      setUser(prev => ({ ...prev, name: userInfo.name, email: userInfo.email }));
+    }
+  }, []);
 
   const handleUpdateProfile = (e) => {
     e.preventDefault();
@@ -21,7 +28,7 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userInfo');
     navigate('/login');
     toast.success('Logged out');
   };

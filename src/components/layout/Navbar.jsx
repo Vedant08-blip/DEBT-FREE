@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, Menu, X } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Menu, X, ShieldCheck } from 'lucide-react';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 import Input from '../ui/Input';
 import { toast } from 'react-hot-toast';
+import { authAPI } from '../../utils/api';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -16,10 +17,19 @@ export default function Navbar() {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [loginErrors, setLoginErrors] = useState({});
-  const [signupErrors, setSignupErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  const handleLoginSubmit = (e) => {
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo) {
+      setIsAuth(true);
+      setIsAdmin(userInfo.isAdmin);
+    }
+  }, []);
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!loginData.email) newErrors.email = 'Email is required';
@@ -31,16 +41,22 @@ export default function Navbar() {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const data = await authAPI.login(loginData);
+      localStorage.setItem('userInfo', JSON.stringify(data));
       setIsLoading(false);
       setIsLoginOpen(false);
+      setIsAuth(true);
       toast.success('Successfully logged in!');
-      localStorage.setItem('isAuthenticated', 'true');
       navigate('/dashboard');
-    }, 1000);
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(err.message || 'Failed to login');
+      setLoginErrors({ server: err.message });
+    }
   };
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!signupData.name) newErrors.name = 'Full name is required';
@@ -56,13 +72,20 @@ export default function Navbar() {
     }
 
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const { name, email, password } = signupData;
+      const data = await authAPI.register({ name, email, password });
+      localStorage.setItem('userInfo', JSON.stringify(data));
       setIsLoading(false);
       setIsSignupOpen(false);
+      setIsAuth(true);
       toast.success('Account created successfully!');
-      localStorage.setItem('isAuthenticated', 'true');
       navigate('/dashboard');
-    }, 1000);
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(err.message || 'Failed to register');
+      setSignupErrors({ server: err.message });
+    }
   };
 
   return (
@@ -85,12 +108,23 @@ export default function Navbar() {
                 <Link to="/contact" className="text-sm font-semibold text-text-muted hover:text-text-primary transition-colors">
                   Contact
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin" className="text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">
+                    <ShieldCheck className="w-4 h-4" /> Admin Panel
+                  </Link>
+                )}
               </div>
               
               <div className="hidden sm:flex items-center gap-3">
-                <button onClick={() => setIsLoginOpen(true)}>
-                  <Button size="sm" className="shadow-md shadow-primary/20">Log In</Button>
-                </button>
+                {isAuth ? (
+                  <Link to="/dashboard">
+                    <Button size="sm" className="shadow-md shadow-primary/20">Dashboard</Button>
+                  </Link>
+                ) : (
+                  <button onClick={() => setIsLoginOpen(true)}>
+                    <Button size="sm" className="shadow-md shadow-primary/20">Log In</Button>
+                  </button>
+                )}
               </div>
 
               {/* Mobile Menu Toggle */}
@@ -123,24 +157,54 @@ export default function Navbar() {
                 Contact
               </Link>
               <div className="pt-4 flex flex-col gap-3">
-                <button 
-                  onClick={() => {
-                    setIsLoginOpen(true);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full py-3 rounded-xl border border-white/10 font-bold text-slate-300 bg-white/5"
-                >
-                  Log In
-                </button>
-                <button 
-                  onClick={() => {
-                    setIsSignupOpen(true);
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20"
-                >
-                  Join DebtFree
-                </button>
+                {isAuth ? (
+                  <>
+                    <Link 
+                      to="/dashboard" 
+                      className="w-full py-3 rounded-xl border border-white/10 font-bold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    {isAdmin && (
+                      <Link 
+                        to="/admin" 
+                        className="w-full py-3 rounded-xl border border-blue-500/20 font-bold text-blue-400 bg-blue-500/5 text-center"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Admin Panel
+                      </Link>
+                    )}
+                    <Link 
+                      to="/profile" 
+                      className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      My Profile
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => {
+                        setIsLoginOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full py-3 rounded-xl border border-white/10 font-bold text-slate-300 bg-white/5"
+                    >
+                      Log In
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setIsSignupOpen(true);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/20"
+                    >
+                      Join DebtFree
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
