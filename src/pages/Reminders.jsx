@@ -12,6 +12,7 @@ const Reminders = () => {
   const [globalEnabled, setGlobalEnabled] = useState(true);
   const [daysBefore, setDaysBefore] = useState('3');
   const [loanToggles, setLoanToggles] = useState({});
+  const [isTesting, setIsTesting] = useState(false);
 
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -72,14 +73,19 @@ const Reminders = () => {
   };
 
   const handleTest = async () => {
+    setIsTesting(true);
+    const toastId = toast.loading('Sending test email...');
     try {
       const res = await authAPI.testReminder();
-      toast.success(res.message, { 
-        duration: 4000,
-        icon: '🔔'
+      toast.success('Live test email sent successfully!', { 
+        id: toastId,
+        duration: 5000,
+        icon: '📩'
       });
     } catch (err) {
-      toast.error(err.message || 'Failed to send test notification');
+      toast.error(err.message || 'Failed to send test notification', { id: toastId });
+    } finally {
+      setIsTesting(false);
     }
   };
 
@@ -102,10 +108,18 @@ const Reminders = () => {
         </div>
         <Button 
           onClick={handleTest} 
+          disabled={isTesting}
           variant="outline"
-          className="w-full sm:w-auto border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+          className={`w-full sm:w-auto border-blue-500/30 text-blue-400 hover:bg-blue-500/10 transition-all duration-300 ${isTesting ? 'opacity-70 scale-95' : 'hover:scale-105'}`}
         >
-          Send Test Notification
+          {isTesting ? (
+            <span className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-blue-500/30 border-t-blue-400 rounded-full animate-spin"></div>
+              Sending Email...
+            </span>
+          ) : (
+            'Send Test Notification'
+          )}
         </Button>
       </div>
 
