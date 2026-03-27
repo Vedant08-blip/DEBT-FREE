@@ -3,7 +3,7 @@ import PageWrapper from '../components/layout/PageWrapper';
 import Card from '../components/ui/Card';
 import Toggle from '../components/ui/Toggle';
 import Button from '../components/ui/Button';
-import { loanAPI } from '../utils/api';
+import { loanAPI, authAPI } from '../utils/api';
 import { toast } from 'react-hot-toast';
 
 export default function Reminders() {
@@ -15,23 +15,63 @@ export default function Reminders() {
   const [loanToggles, setLoanToggles] = useState({});
 
   useEffect(() => {
-    const fetchLoans = async () => {
+    const fetchInitialData = async () => {
       try {
-        const data = await loanAPI.getLoans();
-        setLoans(data);
-        const initialToggles = data.reduce((acc, loan) => ({ ...acc, [loan._id]: true }), {});
-        setLoanToggles(initialToggles);
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        if (userInfo && userInfo.reminderSettings) {
+          setGlobalEnabled(userInfo.reminderSettings.globalEnabled);
+          setChannel(userInfo.reminderSettings.channel);
+          setDaysBefore(userInfo.reminderSettings.daysBefore.toString());
+        }
+
+        const loanData = await loanAPI.getLoans();
+        setLoans(loanData);
+        const toggles = loanData.reduce((acc, loan) => ({ 
+          ...acc, 
+          [loan._id]: loan.isReminderEnabled 
+        }), {});
+        setLoanToggles(toggles);
         setIsLoading(false);
       } catch (err) {
-        toast.error(err.message || 'Failed to fetch loans');
+        toast.error(err.message || 'Failed to load settings');
         setIsLoading(false);
       }
     };
-    fetchLoans();
+    fetchInitialData();
   }, []);
 
-  const handleSave = () => {
-    toast.success('Reminder settings saved successfully!');
+  const handleSave = async () => {
+    try {
+      // 1. Save global settings
+      const updatedUser = await authAPI.updateReminders({
+        globalEnabled,
+        channel,
+        daysBefore: Number(daysBefore)
+      });
+      
+      // Update localStorage
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      localStorage.setItem('userInfo', JSON.stringify({
+        ...userInfo,
+        reminderSettings: updatedUser.reminderSettings
+      }));
+
+      // 2. Save individual loan toggles
+      const updatePromises = loans.map(loan => {
+        if (loan.isReminderEnabled !== loanToggles[loan._id]) {
+          return loanAPI.updateLoan(loan._id, { isReminderEnabled: loanToggles[loan._id] });
+        }
+        return null;
+      }).filter(Boolean);
+
+      if (updatePromises.length > 0) {
+        await Promise.all(updatePromises);
+      }
+
+      toast.success('Reminder settings synced successfully!');
+    } catch (err) {
+      toast.error(err.message || 'Failed to sync settings');
+    }
   };
 
   if (isLoading) {
@@ -47,16 +87,16 @@ export default function Reminders() {
   return (
     <PageWrapper isProtected={true}>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary">Reminders</h1>
-        <p className="text-text-muted mt-1">Never miss an EMI payment. Configure your notifications.</p>
+        <h1 className="text-2xl font-bold text-white">Payment Reminders</h1>
+        <p className="text-slate-400 mt-1">Configure automated SMS and Email alerts for your EMIs.</p>
       </div>
 
       <div className="max-w-3xl space-y-6">
-        <Card>
-          <div className="flex justify-between items-center mb-6 pb-6 border-b border-border">
+        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/5">
+          <div className="flex justify-between items-center mb-6 pb-6 border-b border-white/10">
             <div>
-              <h3 className="text-lg font-semibold text-text-primary">Master Switch</h3>
-              <p className="text-sm text-text-muted">Enable or disable all payment reminders.</p>
+              <h3 className="text-lg font-semibold text-white">Master Switch</h3>
+              <p className="text-sm text-slate-400">Enable or disable all payment reminders.</p>
             </div>
             <Toggle checked={globalEnabled} onChange={setGlobalEnabled} />
           </div>
@@ -64,11 +104,11 @@ export default function Reminders() {
           <div className={`space-y-6 transition-opacity ${globalEnabled ? 'opacity-100' : 'opacity-50 pointer-events-none'}`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">Delivery Channel</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Delivery Channel</label>
                 <select 
                   value={channel} 
                   onChange={(e) => setChannel(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="email">Email Only</option>
                   <option value="sms">SMS Only</option>
@@ -77,11 +117,11 @@ export default function Reminders() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">Remind me</label>
+                <label className="block text-sm font-medium text-slate-300 mb-2">Lead Time</label>
                 <select 
                   value={daysBefore} 
                   onChange={(e) => setDaysBefore(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="1">1 Day before EMI</option>
                   <option value="2">2 Days before EMI</option>
@@ -93,20 +133,20 @@ export default function Reminders() {
             </div>
 
             <div>
-              <h4 className="font-medium text-text-primary mb-4">Per Loan Settings</h4>
+              <h4 className="font-medium text-white mb-4">Targeted Loan Reminders</h4>
               <div className="space-y-3">
                 {loans.length === 0 ? (
-                  <p className="text-sm text-text-muted italic">No loans found. Add loans to set reminders.</p>
+                  <p className="text-sm text-slate-500 italic">No loans found. Add loans to set specific reminders.</p>
                 ) : (
                   loans.map(loan => (
-                    <div key={loan._id} className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-border">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
+                    <div key={loan._id} className="flex justify-between items-center bg-slate-950/50 p-4 rounded-xl border border-white/5">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-400 font-bold border border-blue-500/20">
                           {loan.emiDate}
                         </div>
                         <div>
-                          <p className="font-medium text-text-primary text-sm">{loan.name}</p>
-                          <p className="text-xs text-text-muted">EMI: ₹{loan.emiAmount.toLocaleString('en-IN')}</p>
+                          <p className="font-semibold text-white text-sm">{loan.name}</p>
+                          <p className="text-xs text-slate-400">EMI: ₹{loan.emiAmount.toLocaleString('en-IN')}</p>
                         </div>
                       </div>
                       <Toggle 
@@ -120,8 +160,10 @@ export default function Reminders() {
             </div>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-border flex justify-end">
-            <Button onClick={handleSave}>Save Settings</Button>
+          <div className="mt-8 pt-6 border-t border-white/10 flex justify-end">
+            <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-500 shadow-xl shadow-blue-500/20 px-8">
+              Save Preferences
+            </Button>
           </div>
         </Card>
       </div>

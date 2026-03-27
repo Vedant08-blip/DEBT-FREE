@@ -12,7 +12,8 @@ const defaultFormState = {
   interestRate: '',
   emiAmount: '',
   tenureMonths: '',
-  emiDate: ''
+  emiDate: '',
+  isReminderEnabled: true
 };
 
 export default function LoanForm({ isOpen, onClose, onSave, initialData }) {
@@ -158,6 +159,17 @@ export default function LoanForm({ isOpen, onClose, onSave, initialData }) {
             value={formData.emiDate}
             onChange={handleChange}
             error={errors.emiDate}
+          />
+        </div>
+
+        <div className="flex items-center justify-between p-4 bg-blue-500/5 rounded-xl border border-blue-500/10">
+          <div>
+            <p className="text-sm font-semibold text-white">Enable Reminders</p>
+            <p className="text-xs text-slate-400">Receive alerts before EMI due date</p>
+          </div>
+          <Toggle 
+            checked={formData.isReminderEnabled} 
+            onChange={(checked) => setFormData(prev => ({ ...prev, isReminderEnabled: checked }))} 
           />
         </div>
 

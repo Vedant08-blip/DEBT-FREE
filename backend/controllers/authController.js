@@ -16,6 +16,7 @@ const authUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      reminderSettings: user.reminderSettings,
       token: generateToken(user._id),
     });
   } else {
@@ -49,6 +50,7 @@ const registerUser = async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      reminderSettings: user.reminderSettings,
       token: generateToken(user._id),
     });
   } else {
@@ -60,9 +62,33 @@ const registerUser = async (req, res) => {
 // @desc    Get all users
 // @route   GET /api/auth/users
 // @access  Private/Admin
-const getUsers = async (req, res) => {
+const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({}).select('-password');
   res.json(users);
-};
+});
+const updateReminderSettings = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
 
-export { authUser, registerUser, getUsers };
+  if (user) {
+    user.reminderSettings = {
+      globalEnabled: req.body.globalEnabled !== undefined ? req.body.globalEnabled : user.reminderSettings.globalEnabled,
+      channel: req.body.channel || user.reminderSettings.channel,
+      daysBefore: req.body.daysBefore !== undefined ? req.body.daysBefore : user.reminderSettings.daysBefore,
+    };
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      reminderSettings: updatedUser.reminderSettings,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+export { authUser, registerUser, getUsers, updateReminderSettings };

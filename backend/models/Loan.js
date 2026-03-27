@@ -47,6 +47,10 @@ const loanSchema = mongoose.Schema(
       min: 1,
       max: 31,
     },
+    isReminderEnabled: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

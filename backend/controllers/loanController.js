@@ -25,6 +25,7 @@ const createLoan = asyncHandler(async (req, res) => {
     emiAmount,
     tenureMonths,
     emiDate,
+    isReminderEnabled: req.body.isReminderEnabled !== undefined ? req.body.isReminderEnabled : true,
   });
 
   const createdLoan = await loan.save();
@@ -53,6 +54,7 @@ const updateLoan = asyncHandler(async (req, res) => {
     loan.emiAmount = emiAmount || loan.emiAmount;
     loan.tenureMonths = tenureMonths || loan.tenureMonths;
     loan.emiDate = emiDate || loan.emiDate;
+    loan.isReminderEnabled = req.body.isReminderEnabled !== undefined ? req.body.isReminderEnabled : loan.isReminderEnabled;
 
     const updatedLoan = await loan.save();
     res.json(updatedLoan);
