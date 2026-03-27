@@ -1,22 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageWrapper from '../components/layout/PageWrapper';
 import Card from '../components/ui/Card';
 import Toggle from '../components/ui/Toggle';
 import Button from '../components/ui/Button';
-import { dummyLoans } from '../data/dummy';
+import { loanAPI } from '../utils/api';
 import { toast } from 'react-hot-toast';
 
 export default function Reminders() {
+  const [loans, setLoans] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [globalEnabled, setGlobalEnabled] = useState(true);
   const [channel, setChannel] = useState('both');
   const [daysBefore, setDaysBefore] = useState('3');
-  const [loanToggles, setLoanToggles] = useState(
-    dummyLoans.reduce((acc, loan) => ({...acc, [loan.id]: true}), {})
-  );
+  const [loanToggles, setLoanToggles] = useState({});
+
+  useEffect(() => {
+    const fetchLoans = async () => {
+      try {
+        const data = await loanAPI.getLoans();
+        setLoans(data);
+        const initialToggles = data.reduce((acc, loan) => ({ ...acc, [loan._id]: true }), {});
+        setLoanToggles(initialToggles);
+        setIsLoading(false);
+      } catch (err) {
+        toast.error(err.message || 'Failed to fetch loans');
+        setIsLoading(false);
+      }
+    };
+    fetchLoans();
+  }, []);
 
   const handleSave = () => {
     toast.success('Reminder settings saved successfully!');
   };
+
+  if (isLoading) {
+    return (
+      <PageWrapper isProtected={true}>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper isProtected={true}>
@@ -69,23 +95,27 @@ export default function Reminders() {
             <div>
               <h4 className="font-medium text-text-primary mb-4">Per Loan Settings</h4>
               <div className="space-y-3">
-                {dummyLoans.map(loan => (
-                  <div key={loan.id} className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
-                        {loan.emiDate}
+                {loans.length === 0 ? (
+                  <p className="text-sm text-text-muted italic">No loans found. Add loans to set reminders.</p>
+                ) : (
+                  loans.map(loan => (
+                    <div key={loan._id} className="flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-border">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
+                          {loan.emiDate}
+                        </div>
+                        <div>
+                          <p className="font-medium text-text-primary text-sm">{loan.name}</p>
+                          <p className="text-xs text-text-muted">EMI: ₹{loan.emiAmount.toLocaleString('en-IN')}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-text-primary text-sm">{loan.name}</p>
-                        <p className="text-xs text-text-muted">EMI: ₹{loan.emiAmount.toLocaleString('en-IN')}</p>
-                      </div>
+                      <Toggle 
+                        checked={loanToggles[loan._id]} 
+                        onChange={(val) => setLoanToggles(prev => ({...prev, [loan._id]: val}))} 
+                      />
                     </div>
-                    <Toggle 
-                      checked={loanToggles[loan.id]} 
-                      onChange={(val) => setLoanToggles(prev => ({...prev, [loan.id]: val}))} 
-                    />
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
