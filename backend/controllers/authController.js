@@ -105,6 +105,15 @@ const testReminder = asyncHandler(async (req, res) => {
   console.log(`\n--- [ACTION] TEST NOTIFICATION TRIGGERED ---`);
   console.log(`User: ${user.name} (${user.email})`);
   
+  const { daysBefore } = user.reminderSettings;
+  
+  // Create a mock loan for the test
+  const mockLoan = {
+    name: "Live Test Loan",
+    emiAmount: 5000,
+    emiDate: (new Date().getDate() + daysBefore) % 31 || 31
+  };
+
   const textContent = `Hi ${user.name},\n\nThis is a test payment reminder from DebtFree. Your EMI for "${mockLoan.name}" in the amount of ₹${mockLoan.emiAmount} is scheduled for payment on the ${mockLoan.emiDate}th.\n\nWarm regards,\nTeam DebtFree\nVedant Trivedi`;
   
   // Check if real email is configured
