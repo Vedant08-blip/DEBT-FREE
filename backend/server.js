@@ -31,15 +31,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
-if (process.env.NODE_ENV === 'production') {
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+
+if (isProduction) {
+  console.log('--- PRODUCTION MODE: SERVING FRONTEND ---');
   app.use(express.static(path.join(rootDir, 'dist')));
 
   app.get('*', (req, res) =>
     res.sendFile(path.resolve(rootDir, 'dist', 'index.html'))
   );
 } else {
+  console.log('--- DEVELOPMENT MODE: SERVING API MESSAGE ---');
   app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to DebtFree API' });
+    res.json({ message: 'Welcome to DebtFree API', env: process.env.NODE_ENV });
   });
 }
 
