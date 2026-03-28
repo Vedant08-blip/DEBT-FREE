@@ -37,7 +37,7 @@ if (isProduction) {
   console.log('--- PRODUCTION MODE: SERVING FRONTEND ---');
   app.use(express.static(path.join(rootDir, 'dist')));
 
-  app.get('/*', (req, res) =>
+  app.get('(.*)', (req, res) =>
     res.sendFile(path.resolve(rootDir, 'dist', 'index.html'))
   );
 } else {
