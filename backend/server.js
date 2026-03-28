@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import loanRoutes from './routes/loanRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
@@ -21,12 +23,25 @@ app.use(express.json());
 // Enable CORS
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to DebtFree API' });
-});
-
 app.use('/api/auth', authRoutes);
 app.use('/api/loans', loanRoutes);
+
+// Serve Static Assets in Production
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const rootDir = path.resolve(__dirname, '..');
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(rootDir, 'dist')));
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(rootDir, 'dist', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => {
+    res.json({ message: 'Welcome to DebtFree API' });
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

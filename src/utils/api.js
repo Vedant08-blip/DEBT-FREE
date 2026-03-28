@@ -1,4 +1,4 @@
-const API_URL = 'http://127.0.0.1:5052/api';
+const API_URL = '/api';
 
 const getAuthToken = () => {
   const userInfo = JSON.parse(localStorage.getItem('userInfo'));

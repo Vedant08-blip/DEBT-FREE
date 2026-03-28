@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
+    "build": "vite build",
     "server": "nodemon backend/server.js",
-    "backend": "nodemon backend/server.js",
-    "start": "concurrently \"npm run dev\" \"npm run server\"",
-    "dev:full": "npx concurrently \"npm run dev\" \"npm run server\""
+    "start": "node backend/server.js",
+    "dev:full": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
