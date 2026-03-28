@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import loanRoutes from './routes/loanRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import startReminderService from './services/reminderService.js';
 
@@ -25,6 +26,7 @@ app.use(cors());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/loans', loanRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Serve Static Assets in Production
 const __filename = fileURLToPath(import.meta.url);

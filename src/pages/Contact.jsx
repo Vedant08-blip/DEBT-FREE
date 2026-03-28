@@ -131,22 +131,43 @@ const contactLinks = [
   },
 ];
 
-export default function Contact() {
-  const [sent, setSent] = useState(false);
-  const [focused, setFocused] = useState(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouseX.set(e.clientX - rect.left);
-    mouseY.set(e.clientY - rect.top);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
+    setLoading(true);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSent(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setSent(false), 5000);
+      } else {
+        alert('Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      alert('An error occurred. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -378,7 +399,10 @@ export default function Contact() {
                   >
                     <input
                       type={field.type}
+                      id={field.id}
                       placeholder={field.placeholder}
+                      value={formData[field.id]}
+                      onChange={handleChange}
                       onFocus={() => setFocused(field.id)}
                       onBlur={() => setFocused(null)}
                       className="w-full rounded-xl px-5 py-4 text-white text-sm placeholder-slate-600 outline-none transition-all duration-200 font-medium"
@@ -403,8 +427,11 @@ export default function Contact() {
                   className="relative"
                 >
                   <textarea
+                    id="message"
                     rows={4}
                     placeholder="Tell me about your project or idea..."
+                    value={formData.message}
+                    onChange={handleChange}
                     onFocus={() => setFocused("msg")}
                     onBlur={() => setFocused(null)}
                     className="w-full rounded-xl px-5 py-4 text-white text-sm placeholder-slate-600 outline-none transition-all duration-200 font-medium resize-none"
@@ -421,33 +448,40 @@ export default function Contact() {
                   />
                 </motion.div>
 
-                <motion.button
+                  <motion.button
                   type="submit"
+                  disabled={loading}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.75 }}
                   whileHover={{ scale: 1.02, y: -1 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2.5 group relative overflow-hidden"
+                  className={`w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2.5 group relative overflow-hidden ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                   style={{
                     background: "linear-gradient(135deg, #1d4ed8, #4f46e5)",
                     boxShadow: "0 0 30px rgba(37,99,235,0.4), 0 4px 20px rgba(0,0,0,0.3)",
                   }}
                 >
                   {/* Shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%)",
-                    }}
-                    animate={{ x: ["-100%", "200%"] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
-                  />
-                  <span className="relative z-10">Send Message</span>
-                  <Send
-                    size={16}
-                    className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200"
-                  />
+                  {!loading && (
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%)",
+                      }}
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {loading ? 'Sending Transmission...' : 'Send Message'}
+                  </span>
+                  {!loading && (
+                    <Send
+                      size={16}
+                      className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-200"
+                    />
+                  )}
                 </motion.button>
               </form>
             </div>

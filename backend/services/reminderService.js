@@ -3,14 +3,7 @@ import nodemailer from 'nodemailer';
 import User from '../models/User.js';
 import Loan from '../models/Loan.js';
 
-// Setup Email Transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+import transporter from '../utils/emailService.js';
 
 const sendReminders = async () => {
   console.log('--- Running Scheduled EMI Reminder Check ---');
