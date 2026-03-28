@@ -131,6 +131,18 @@ const contactLinks = [
   },
 ];
 
+export default function Contact() {
+  const [sent, setSent] = useState(false);
+  const [focused, setFocused] = useState(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
