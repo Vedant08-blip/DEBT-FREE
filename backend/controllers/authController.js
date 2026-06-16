@@ -30,7 +30,12 @@ const authUser = async (req, res) => {
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, dob } = req.body;
+
+  if (!dob) {
+    res.status(400);
+    throw new Error('Date of Birth is required');
+  }
 
   const userExists = await User.findOne({ email });
 
@@ -43,6 +48,7 @@ const registerUser = async (req, res) => {
     name,
     email,
     password,
+    dob,
   });
 
   if (user) {
@@ -157,4 +163,35 @@ const testReminder = asyncHandler(async (req, res) => {
   res.json({ message: 'Test notification sent! Check your server terminal/inbox.' });
 });
 
-export { authUser, registerUser, getUsers, updateReminderSettings, testReminder };
+// @desc    Reset password using Date of Birth verification
+// @route   POST /api/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res) => {
+  const { email, dob, newPassword } = req.body;
+
+  if (!email || !dob || !newPassword) {
+    res.status(400);
+    throw new Error('Email, Date of Birth, and New Password are required');
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Compare DOB
+  if (user.dob !== dob) {
+    res.status(401);
+    throw new Error('Invalid Date of Birth');
+  }
+
+  // Update password (pre-save hook hashes it automatically)
+  user.password = newPassword;
+  await user.save();
+
+  res.json({ message: 'Password reset successfully' });
+};
+
+export { authUser, registerUser, getUsers, updateReminderSettings, testReminder, resetPassword };

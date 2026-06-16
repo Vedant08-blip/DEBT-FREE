@@ -16,6 +16,11 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    dob: {
+      type: String,
+      required: true,
+      default: '2000-01-01',
+    },
     isAdmin: {
       type: Boolean,
       required: true,

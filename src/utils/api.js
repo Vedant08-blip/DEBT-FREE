@@ -127,6 +127,12 @@ export const authAPI = {
     return apiCall('/auth/login', 'POST', credentials);
   },
   register: (userData) => apiCall('/auth/register', 'POST', userData),
+  resetPassword: (resetData) => {
+    if (resetData.email === 'demo@example.com') {
+      return Promise.resolve({ message: 'Demo Mode: Mock password reset succeeded.' });
+    }
+    return apiCall('/auth/reset-password', 'POST', resetData);
+  },
   getUsers: () => {
     if (isDemoMode()) {
       return Promise.resolve([
