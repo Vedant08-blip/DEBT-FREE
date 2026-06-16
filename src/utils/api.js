@@ -90,6 +90,13 @@ const apiCall = async (endpoint, method = 'GET', body = null) => {
   }
 
   const response = await fetch(`${API_URL}${endpoint}`, options);
+
+  if (response.status === 401 && endpoint !== '/auth/login') {
+    localStorage.removeItem('userInfo');
+    window.location.href = '/login';
+    throw new Error('Session expired. Please log in again.');
+  }
+
   const data = await response.json();
 
   if (!response.ok) {

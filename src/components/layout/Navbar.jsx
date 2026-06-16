@@ -138,9 +138,7 @@ export default function Navbar() {
                     <Button size="sm" className="shadow-md shadow-primary/20">Dashboard</Button>
                   </Link>
                 ) : (
-                  <button onClick={() => setIsLoginOpen(true)}>
-                    <Button size="sm" className="shadow-md shadow-primary/20">Log In</Button>
-                  </button>
+                  <Button onClick={() => setIsLoginOpen(true)} size="sm" className="shadow-md shadow-primary/20">Log In</Button>
                 )}
               </div>
 
