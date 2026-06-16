@@ -19,10 +19,19 @@ export default function Calendar() {
   // Format key: emi_paid_year_month_loanId
   const [paidStatus, setPaidStatus] = useState({});
 
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth();
+
   const fetchLoans = async () => {
     try {
       const data = await loanAPI.getLoans();
       setLoans(data);
+      const status = {};
+      data.forEach(loan => {
+        const key = `emi_paid_${currentYear}_${currentMonth}_${loan._id || loan.id}`;
+        status[loan._id || loan.id] = localStorage.getItem(key) === 'true';
+      });
+      setPaidStatus(status);
       setIsLoading(false);
     } catch (err) {
       toast.error(err.message || 'Failed to fetch loans');
@@ -31,21 +40,31 @@ export default function Calendar() {
   };
 
   useEffect(() => {
-    fetchLoans();
+    let isMounted = true;
+    loanAPI.getLoans()
+      .then(data => {
+        if (isMounted) {
+          setLoans(data);
+          const initDate = new Date();
+          const yr = initDate.getFullYear();
+          const mo = initDate.getMonth();
+          const status = {};
+          data.forEach(loan => {
+            const key = `emi_paid_${yr}_${mo}_${loan._id || loan.id}`;
+            status[loan._id || loan.id] = localStorage.getItem(key) === 'true';
+          });
+          setPaidStatus(status);
+          setIsLoading(false);
+        }
+      })
+      .catch(err => {
+        if (isMounted) {
+          toast.error(err.message || 'Failed to fetch loans');
+          setIsLoading(false);
+        }
+      });
+    return () => { isMounted = false; };
   }, []);
-
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-
-  // Load paid state from localStorage for the current month
-  useEffect(() => {
-    const status = {};
-    loans.forEach(loan => {
-      const key = `emi_paid_${currentYear}_${currentMonth}_${loan._id || loan.id}`;
-      status[loan._id || loan.id] = localStorage.getItem(key) === 'true';
-    });
-    setPaidStatus(status);
-  }, [loans, currentYear, currentMonth]);
 
   const daysInMonth = useMemo(() => {
     return new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -67,13 +86,31 @@ export default function Calendar() {
   };
 
   const handlePrevMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth - 1, 1));
+    const nextDate = new Date(currentYear, currentMonth - 1, 1);
+    setCurrentDate(nextDate);
     setSelectedDay(null);
+    
+    // Recalculate paid status for the new month
+    const status = {};
+    loans.forEach(loan => {
+      const key = `emi_paid_${nextDate.getFullYear()}_${nextDate.getMonth()}_${loan._id || loan.id}`;
+      status[loan._id || loan.id] = localStorage.getItem(key) === 'true';
+    });
+    setPaidStatus(status);
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(new Date(currentYear, currentMonth + 1, 1));
+    const nextDate = new Date(currentYear, currentMonth + 1, 1);
+    setCurrentDate(nextDate);
     setSelectedDay(null);
+    
+    // Recalculate paid status for the new month
+    const status = {};
+    loans.forEach(loan => {
+      const key = `emi_paid_${nextDate.getFullYear()}_${nextDate.getMonth()}_${loan._id || loan.id}`;
+      status[loan._id || loan.id] = localStorage.getItem(key) === 'true';
+    });
+    setPaidStatus(status);
   };
 
   const handleMarkAsPaid = async (loan) => {
@@ -120,7 +157,7 @@ export default function Calendar() {
     
     // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
-      const dayLoans = getLoansDueOnDay(i);
+      const dayLoans = loans.filter(loan => Number(loan.emiDate) === i && loan.outstanding > 0);
       days.push({ 
         day: i, 
         isCurrentMonth: true,

@@ -14,36 +14,42 @@ import { toast } from 'react-hot-toast';
 
 export default function FinancialAnalytics() {
   const [loans, setLoans] = useState([]);
-  const [income, setIncome] = useState(() => {
+  const [income] = useState(() => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       if (userInfo && userInfo.netMonthlyIncome !== undefined) {
         return Number(userInfo.netMonthlyIncome);
       }
-    } catch (e) {}
+    } catch {
+      // Ignore errors
+    }
     return Number(localStorage.getItem('net_monthly_income')) || 75000;
   });
-  const [expenses, setExpenses] = useState(() => {
+  const [expenses] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('monthly_expenses')) || {};
-    } catch (e) {
+    } catch {
       return {};
     }
   });
   const [isLoadingLoans, setIsLoadingLoans] = useState(true);
 
   useEffect(() => {
-    const fetchLoans = async () => {
-      try {
-        const data = await loanAPI.getLoans();
-        setLoans(data);
-      } catch (err) {
-        toast.error(err.message || 'Failed to fetch loans');
-      } finally {
-        setIsLoadingLoans(false);
-      }
-    };
-    fetchLoans();
+    let isMounted = true;
+    loanAPI.getLoans()
+      .then(data => {
+        if (isMounted) {
+          setLoans(data);
+          setIsLoadingLoans(false);
+        }
+      })
+      .catch(err => {
+        if (isMounted) {
+          toast.error(err.message || 'Failed to fetch loans');
+          setIsLoadingLoans(false);
+        }
+      });
+    return () => { isMounted = false; };
   }, []);
 
   // Calculate metrics
@@ -114,14 +120,23 @@ export default function FinancialAnalytics() {
   ];
 
   // Loan progress over time (projected)
-  const projectedPayoffData = loans.slice(0, 3).map((loan, idx) => {
-    const months = loan.tenureMonths;
+  const projectedPayoffData = loans.slice(0, 3).map((loan) => {
     return {
       name: loan.name.substring(0, 12),
       current: loan.outstanding,
       projected: Math.max(0, loan.outstanding - (loan.emiAmount * 6))
     };
   });
+
+  if (isLoadingLoans) {
+    return (
+      <PageWrapper>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+      </PageWrapper>
+    );
+  }
 
   return (
     <PageWrapper>
@@ -211,7 +226,7 @@ export default function FinancialAnalytics() {
                   <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10">
                     <span className="text-slate-400">Monthly Savings</span>
                     <span className={monthlySavings >= 0 ? 'text-emerald-400' : 'text-red-400'}>
-                      ₹{monthlySavings.toLocaleString('en-IN')}
+                      {formatCurrency(monthlySavings)}
                     </span>
                   </div>
                 </div>
@@ -232,7 +247,7 @@ export default function FinancialAnalytics() {
               <div>
                 <p className="text-slate-400 text-sm">Total Debt</p>
                 <p className="text-2xl font-bold text-white mt-2">
-                  ₹{(totalDebt / 100000).toFixed(1)}L
+                  {formatCurrency(totalDebt)}
                 </p>
               </div>
               <Zap className="w-8 h-8 text-blue-400 opacity-50" />
@@ -244,7 +259,7 @@ export default function FinancialAnalytics() {
               <div>
                 <p className="text-slate-400 text-sm">Monthly EMI</p>
                 <p className="text-2xl font-bold text-white mt-2">
-                  ₹{monthlyEMI.toLocaleString('en-IN')}
+                  {formatCurrency(monthlyEMI)}
                 </p>
               </div>
               <Target className="w-8 h-8 text-blue-400 opacity-50" />
@@ -256,7 +271,7 @@ export default function FinancialAnalytics() {
               <div>
                 <p className="text-slate-400 text-sm">Total Expenses</p>
                 <p className="text-2xl font-bold text-white mt-2">
-                  ₹{totalExpenses.toLocaleString('en-IN')}
+                  {formatCurrency(totalExpenses)}
                 </p>
               </div>
               <AlertCircle className="w-8 h-8 text-orange-400 opacity-50" />
@@ -268,7 +283,7 @@ export default function FinancialAnalytics() {
               <div>
                 <p className="text-slate-400 text-sm">Monthly Savings</p>
                 <p className={`text-2xl font-bold mt-2 ${monthlySavings >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                  ₹{monthlySavings.toLocaleString('en-IN')}
+                  {formatCurrency(monthlySavings)}
                 </p>
               </div>
               <Award className="w-8 h-8 text-emerald-400 opacity-50" />
@@ -344,7 +359,7 @@ export default function FinancialAnalytics() {
                         ></div>
                       </div>
                       <span className="text-white font-semibold min-w-32 text-right">
-                        ₹{Number(amount).toLocaleString('en-IN')}
+                        {formatCurrency(Number(amount))}
                       </span>
                     </div>
                   </div>

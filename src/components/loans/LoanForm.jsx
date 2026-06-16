@@ -18,19 +18,8 @@ const defaultFormState = {
 };
 
 export default function LoanForm({ isOpen, onClose, onSave, initialData }) {
-  const [formData, setFormData] = useState(defaultFormState);
+  const [formData, setFormData] = useState(initialData || defaultFormState);
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    if (isOpen) {
-      if (initialData) {
-        setFormData(initialData);
-      } else {
-        setFormData(defaultFormState);
-      }
-      setErrors({});
-    }
-  }, [isOpen, initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

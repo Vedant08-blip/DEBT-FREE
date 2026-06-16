@@ -11,7 +11,7 @@ export const formatCurrency = (amount, customCurrency = null) => {
       if (userInfo && userInfo.currency) {
         currency = userInfo.currency;
       }
-    } catch (e) {
+    } catch {
       // Ignore errors
     }
   }

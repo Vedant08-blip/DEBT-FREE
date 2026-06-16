@@ -15,10 +15,6 @@ export default function MyLoans() {
   const [editingLoan, setEditingLoan] = useState(null);
   const [selectedAmortizationLoan, setSelectedAmortizationLoan] = useState(null);
 
-  useEffect(() => {
-    fetchLoans();
-  }, []);
-
   const fetchLoans = async () => {
     try {
       const data = await loanAPI.getLoans();
@@ -27,6 +23,18 @@ export default function MyLoans() {
       toast.error(err.message || 'Failed to fetch loans');
     }
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    loanAPI.getLoans()
+      .then(data => {
+        if (isMounted) setLoans(data);
+      })
+      .catch(err => {
+        if (isMounted) toast.error(err.message || 'Failed to fetch loans');
+      });
+    return () => { isMounted = false; };
+  }, []);
 
 
   const handleOpenAdd = () => {
@@ -100,6 +108,7 @@ export default function MyLoans() {
       </motion.div>
 
       <LoanForm 
+        key={isModalOpen ? (editingLoan?._id || editingLoan?.id || 'new') : 'closed'}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveLoan}

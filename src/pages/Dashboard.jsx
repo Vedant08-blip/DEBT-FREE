@@ -10,7 +10,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ProgressHeatmap from '../components/ui/ProgressHeatmap';
 import { formatCurrency } from '../utils/formatCurrency';
-import { loanAPI } from '../utils/api';
+import { loanAPI, authAPI } from '../utils/api';
 import { Plus, Award, Coins, Download, Lock, CheckCircle, ShieldCheck, Printer, AlertTriangle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -22,7 +22,9 @@ export default function Dashboard() {
       if (userInfo && userInfo.netMonthlyIncome !== undefined) {
         return Number(userInfo.netMonthlyIncome);
       }
-    } catch (e) {}
+    } catch {
+      // Ignore errors
+    }
     return Number(localStorage.getItem('net_monthly_income')) || 75000;
   });
   const [isEditingIncome, setIsEditingIncome] = useState(false);
@@ -91,7 +93,9 @@ export default function Dashboard() {
         if (userInfo.currency === 'USD') return '$';
         if (userInfo.currency === 'EUR') return '€';
       }
-    } catch (e) {}
+    } catch {
+      // Ignore errors
+    }
     return '₹';
   };
 

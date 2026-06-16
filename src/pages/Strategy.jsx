@@ -28,7 +28,6 @@ const calculatePayoff = (loans, extraMonthlyBudget, sortBy) => {
   // 2. Simulate month by month
   while (totalPrincipal > 0 && months < 600) { // Limit to 50 years
     let monthlyExtra = extraMonthlyBudget;
-    let monthlyPrincipalPaid = 0;
     let monthlyInterestPaid = 0;
 
     activeLoans.forEach(loan => {
@@ -42,7 +41,6 @@ const calculatePayoff = (loans, extraMonthlyBudget, sortBy) => {
         let principalPaid = payment - monthlyInterest;
         
         loan.currentBalance -= principalPaid;
-        monthlyPrincipalPaid += principalPaid;
       }
     });
 
@@ -51,7 +49,6 @@ const calculatePayoff = (loans, extraMonthlyBudget, sortBy) => {
     if (priorityLoan && monthlyExtra > 0) {
       const extraToApply = Math.min(monthlyExtra, priorityLoan.currentBalance);
       priorityLoan.currentBalance -= extraToApply;
-      monthlyPrincipalPaid += extraToApply;
     }
 
     totalInterest += monthlyInterestPaid;

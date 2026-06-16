@@ -18,16 +18,14 @@ const navItems = [
 
 export default function Sidebar() {
   const location = useLocation();
-  const [isDemo, setIsDemo] = useState(false);
-
-  useEffect(() => {
+  const [isDemo] = useState(() => {
     try {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      setIsDemo(!!(userInfo && userInfo.isDemo));
-    } catch (e) {
-      setIsDemo(false);
+      return !!(userInfo && userInfo.isDemo);
+    } catch {
+      return false;
     }
-  }, []);
+  });
 
   return (
     <>

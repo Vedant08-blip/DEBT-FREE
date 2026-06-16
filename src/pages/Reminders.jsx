@@ -76,7 +76,7 @@ const Reminders = () => {
     setIsTesting(true);
     const toastId = toast.loading('Sending test email...');
     try {
-      const res = await authAPI.testReminder();
+      await authAPI.testReminder();
       toast.success('Live test email sent successfully!', { 
         id: toastId,
         duration: 5000,
