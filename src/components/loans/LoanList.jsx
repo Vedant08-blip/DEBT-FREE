@@ -1,6 +1,6 @@
 import LoanCard from './LoanCard';
 
-export default function LoanList({ loans, onEdit, onDelete }) {
+export default function LoanList({ loans, onEdit, onDelete, onViewAmortization }) {
   if (!loans || loans.length === 0) {
     return (
       <div className="text-center py-12 bg-card rounded-xl border border-dashed border-border shadow-xl">
@@ -18,6 +18,7 @@ export default function LoanList({ loans, onEdit, onDelete }) {
           loan={loan} 
           onEdit={onEdit} 
           onDelete={onDelete} 
+          onViewAmortization={onViewAmortization}
         />
       ))}
     </div>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import PageWrapper from '../components/layout/PageWrapper';
 import LoanList from '../components/loans/LoanList';
 import LoanForm from '../components/loans/LoanForm';
+import AmortizationModal from '../components/loans/AmortizationModal';
 import Button from '../components/ui/Button';
 import { Plus } from 'lucide-react';
 import { loanAPI } from '../utils/api';
@@ -12,6 +13,7 @@ export default function MyLoans() {
   const [loans, setLoans] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLoan, setEditingLoan] = useState(null);
+  const [selectedAmortizationLoan, setSelectedAmortizationLoan] = useState(null);
 
   useEffect(() => {
     fetchLoans();
@@ -93,6 +95,7 @@ export default function MyLoans() {
           loans={loans} 
           onEdit={handleOpenEdit} 
           onDelete={handleDelete} 
+          onViewAmortization={(loan) => setSelectedAmortizationLoan(loan)}
         />
       </motion.div>
 
@@ -101,6 +104,12 @@ export default function MyLoans() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveLoan}
         initialData={editingLoan}
+      />
+
+      <AmortizationModal 
+        isOpen={selectedAmortizationLoan !== null}
+        onClose={() => setSelectedAmortizationLoan(null)}
+        loan={selectedAmortizationLoan}
       />
     </PageWrapper>
   );

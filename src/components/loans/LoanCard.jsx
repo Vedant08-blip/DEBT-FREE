@@ -4,7 +4,7 @@ import ProgressBar from '../ui/ProgressBar';
 import Badge from '../ui/Badge';
 import { formatCurrency } from '../../utils/formatCurrency';
 
-export default function LoanCard({ loan, onEdit, onDelete }) {
+export default function LoanCard({ loan, onEdit, onDelete, onViewAmortization }) {
   const percentPaid = loan.principal > 0 
     ? Math.max(0, 100 - (loan.outstanding / loan.principal) * 100) 
     : 0;
@@ -59,6 +59,13 @@ export default function LoanCard({ loan, onEdit, onDelete }) {
           </div>
           <ProgressBar progress={percentPaid} />
         </div>
+
+        <button 
+          onClick={() => onViewAmortization(loan)}
+          className="mt-2 w-full py-2.5 rounded-xl border border-white/5 bg-slate-950/30 text-xs font-bold text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
+        >
+          📊 View Amortization Schedule
+        </button>
       </div>
     </Card>
   );
