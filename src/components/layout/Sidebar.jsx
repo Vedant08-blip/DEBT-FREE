@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, PieChart, Calculator, Bell, User, LayoutDashboard, WalletCards } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -13,6 +14,16 @@ const navItems = [
 
 export default function Sidebar() {
   const location = useLocation();
+  const [isDemo, setIsDemo] = useState(false);
+
+  useEffect(() => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      setIsDemo(!!(userInfo && userInfo.isDemo));
+    } catch (e) {
+      setIsDemo(false);
+    }
+  }, []);
 
   return (
     <>
@@ -47,6 +58,13 @@ export default function Sidebar() {
             );
           })}
         </nav>
+
+        {isDemo && (
+          <div className="p-4 mx-4 mb-6 rounded-2xl bg-gradient-to-br from-blue-600/10 via-indigo-600/10 to-transparent border border-blue-500/20 shadow-[0_0_15px_rgba(37,99,235,0.05)] text-center">
+            <span className="text-xs font-semibold text-blue-400">Demo Environment</span>
+            <p className="text-[10px] text-slate-400 mt-1">Changes are saved in browser memory</p>
+          </div>
+        )}
       </aside>
 
       {/* Mobile Bottom Nav */}

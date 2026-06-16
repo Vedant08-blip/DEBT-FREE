@@ -57,6 +57,22 @@ export default function Navbar() {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    try {
+      const data = await authAPI.login({ email: 'demo@example.com', password: 'demo' });
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      setIsLoading(false);
+      setIsLoginOpen(false);
+      setIsAuth(true);
+      toast.success('Successfully entered Demo Mode!');
+      navigate('/dashboard');
+    } catch (err) {
+      setIsLoading(false);
+      toast.error('Failed to access demo environment');
+    }
+  };
+
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
@@ -265,6 +281,21 @@ export default function Navbar() {
               Log in to Dashboard
               {!isLoading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
             </Button>
+
+            <div className="relative flex py-1 items-center justify-center">
+              <div className="flex-grow border-t border-border"></div>
+              <span className="flex-shrink mx-4 text-xs text-text-muted uppercase tracking-widest">Or</span>
+              <div className="flex-grow border-t border-border"></div>
+            </div>
+
+            <button 
+              type="button" 
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+              className="w-full h-12 rounded-xl font-bold text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-300 active:scale-[0.98] flex justify-center items-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              🚀 Explore Demo Mode
+            </button>
           </form>
 
           <div className="mt-8 text-center text-sm text-text-muted relative">

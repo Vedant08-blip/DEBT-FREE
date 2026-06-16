@@ -41,6 +41,20 @@ export default function Login() {
     }
   };
 
+  const handleDemoLogin = async () => {
+    setIsLoading(true);
+    try {
+      const data = await authAPI.login({ email: 'demo@example.com', password: 'demo' });
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      setIsLoading(false);
+      toast.success('Successfully entered Demo Mode!');
+      navigate('/dashboard');
+    } catch (err) {
+      setIsLoading(false);
+      toast.error('Failed to access demo environment');
+    }
+  };
+
   return (
     <PageWrapper isProtected={false}>
       <style>{`
@@ -118,6 +132,21 @@ export default function Login() {
               ) : (
                 'Access Mission Control'
               )}
+            </button>
+
+            <div className="relative flex py-2 items-center justify-center">
+              <div className="flex-grow border-t border-white/10"></div>
+              <span className="flex-shrink mx-4 text-xs text-slate-500 uppercase tracking-widest">Or</span>
+              <div className="flex-grow border-t border-white/10"></div>
+            </div>
+
+            <button 
+              type="button" 
+              onClick={handleDemoLogin}
+              disabled={isLoading}
+              className="w-full py-4 rounded-xl font-bold text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-300 active:scale-[0.98] flex justify-center items-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
+            >
+              🚀 Explore Demo Mode
             </button>
           </form>
 
