@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Home, PieChart, Calculator, Bell, User, LayoutDashboard, WalletCards } from 'lucide-react';
+import { Home, PieChart, Calculator, Bell, User, LayoutDashboard, WalletCards, Calendar, BookOpen } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
   { name: 'My Loans', path: '/loans', icon: WalletCards },
+  { name: 'Payoff Calendar', path: '/calendar', icon: Calendar },
   { name: 'Strategy', path: '/strategy', icon: PieChart },
   { name: 'Simulator', path: '/simulator', icon: Calculator },
+  { name: 'Credit Academy', path: '/credit-guide', icon: BookOpen },
   { name: 'Reminders', path: '/reminders', icon: Bell },
   { name: 'Profile', path: '/profile', icon: User },
 ];

@@ -14,6 +14,8 @@ import Careers from './pages/Careers';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import AdminDashboard from './pages/AdminDashboard';
+import Calendar from './pages/Calendar';
+import CreditGuide from './pages/CreditGuide';
 
 // Simple Protected Route wrapper checking local storage
 const ProtectedRoute = ({ children }) => {
@@ -84,6 +86,16 @@ export default function App() {
         <Route path="/simulator" element={
           <ProtectedRoute>
             <Simulator />
+          </ProtectedRoute>
+        } />
+        <Route path="/calendar" element={
+          <ProtectedRoute>
+            <Calendar />
+          </ProtectedRoute>
+        } />
+        <Route path="/credit-guide" element={
+          <ProtectedRoute>
+            <CreditGuide />
           </ProtectedRoute>
         } />
         <Route path="/reminders" element={
