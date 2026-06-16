@@ -176,15 +176,57 @@ export default function Navbar() {
                   <>
                     <Link 
                       to="/dashboard" 
-                      className="w-full py-3 rounded-xl border border-white/10 font-bold text-slate-300 bg-white/5 text-center"
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Dashboard
                     </Link>
+                    <Link 
+                      to="/loans" 
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      My Loans
+                    </Link>
+                    <Link 
+                      to="/calendar" 
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Payoff Calendar
+                    </Link>
+                    <Link 
+                      to="/strategy" 
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Strategy Architect
+                    </Link>
+                    <Link 
+                      to="/simulator" 
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Time Machine Simulator
+                    </Link>
+                    <Link 
+                      to="/credit-guide" 
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Credit Academy
+                    </Link>
+                    <Link 
+                      to="/reminders" 
+                      className="w-full py-2.5 rounded-xl border border-white/10 font-semibold text-slate-300 bg-white/5 text-center"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Reminders
+                    </Link>
                     {isAdmin && (
                       <Link 
                         to="/admin" 
-                        className="w-full py-3 rounded-xl border border-blue-500/20 font-bold text-blue-400 bg-blue-500/5 text-center"
+                        className="w-full py-2.5 rounded-xl border border-blue-500/20 font-semibold text-blue-400 bg-blue-500/5 text-center"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Admin Panel

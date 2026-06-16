@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Home, PieChart, Calculator, Bell, User, LayoutDashboard, WalletCards, Calendar, BookOpen } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -67,10 +69,9 @@ export default function Sidebar() {
         )}
       </aside>
 
-      {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-slate-950/60 backdrop-blur-2xl border-t border-white/10 z-50 px-2 py-2 pb-safe">
         <div className="flex items-center justify-around">
-          {navItems.map((item) => {
+          {navItems.filter(item => ['Dashboard', 'My Loans', 'Payoff Calendar', 'Strategy', 'Profile'].includes(item.name)).map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
             
