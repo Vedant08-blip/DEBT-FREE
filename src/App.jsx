@@ -16,6 +16,8 @@ import TermsOfService from './pages/TermsOfService';
 import AdminDashboard from './pages/AdminDashboard';
 import Calendar from './pages/Calendar';
 import CreditGuide from './pages/CreditGuide';
+import FinancialAnalytics from './pages/FinancialAnalytics';
+import EducationLearning from './pages/EducationLearning';
 
 // Simple Protected Route wrapper checking local storage
 const ProtectedRoute = ({ children }) => {
@@ -96,6 +98,16 @@ export default function App() {
         <Route path="/credit-guide" element={
           <ProtectedRoute>
             <CreditGuide />
+          </ProtectedRoute>
+        } />
+        <Route path="/analytics" element={
+          <ProtectedRoute>
+            <FinancialAnalytics />
+          </ProtectedRoute>
+        } />
+        <Route path="/education" element={
+          <ProtectedRoute>
+            <EducationLearning />
           </ProtectedRoute>
         } />
         <Route path="/reminders" element={

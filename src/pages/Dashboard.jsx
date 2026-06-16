@@ -17,6 +17,12 @@ import { toast } from 'react-hot-toast';
 export default function Dashboard() {
   const [loans, setLoans] = useState([]);
   const [income, setIncome] = useState(() => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (userInfo && userInfo.netMonthlyIncome !== undefined) {
+        return Number(userInfo.netMonthlyIncome);
+      }
+    } catch (e) {}
     return Number(localStorage.getItem('net_monthly_income')) || 75000;
   });
   const [isEditingIncome, setIsEditingIncome] = useState(false);
@@ -78,15 +84,36 @@ export default function Dashboard() {
 
   const dtiHealth = getDtiHealth(dtiRatio);
 
-  const handleSaveIncome = () => {
+  const getCurrencySymbol = () => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (userInfo && userInfo.currency) {
+        if (userInfo.currency === 'USD') return '$';
+        if (userInfo.currency === 'EUR') return '€';
+      }
+    } catch (e) {}
+    return '₹';
+  };
+
+  const handleSaveIncome = async () => {
     if (tempIncome <= 0) {
       toast.error("Please enter a valid monthly income");
       return;
     }
-    setIncome(tempIncome);
-    localStorage.setItem('net_monthly_income', tempIncome.toString());
-    setIsEditingIncome(false);
-    toast.success("Income updated successfully!");
+    try {
+      localStorage.setItem('net_monthly_income', tempIncome.toString());
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      if (userInfo) {
+        const updatedUser = { ...userInfo, netMonthlyIncome: tempIncome };
+        localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+        await authAPI.updateProfile({ netMonthlyIncome: tempIncome });
+      }
+      setIncome(tempIncome);
+      setIsEditingIncome(false);
+      toast.success("Income updated successfully!");
+    } catch (err) {
+      toast.error(err.message || "Failed to update income");
+    }
   };
 
   // Gamified Milestones Calculation
@@ -313,11 +340,11 @@ export default function Dashboard() {
                   trackColor="text-slate-800" 
                 />
                 
-                {/* Income edit area */}
+                 {/* Income edit area */}
                 <div className="mt-4 text-center">
                   {isEditingIncome ? (
                     <div className="flex items-center gap-2 justify-center">
-                      <span className="text-slate-500 font-semibold">₹</span>
+                      <span className="text-slate-500 font-semibold">{getCurrencySymbol()}</span>
                       <input 
                         type="number"
                         value={tempIncome}
@@ -333,7 +360,7 @@ export default function Dashboard() {
                     </div>
                   ) : (
                     <p className="text-xs text-slate-400">
-                      Based on Net Income of <span className="text-white font-semibold">₹{income.toLocaleString('en-IN')}</span>{' '}
+                      Based on Net Income of <span className="text-white font-semibold">{formatCurrency(income)}</span>{' '}
                       <button 
                         onClick={() => {
                           setTempIncome(income);

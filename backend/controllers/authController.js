@@ -6,7 +6,7 @@ import sendEmail from '../utils/sendEmail.js';
 // @desc    Auth user & get token
 // @route   POST /api/auth/login
 // @access  Public
-const authUser = async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -30,12 +30,12 @@ const authUser = async (req, res) => {
     res.status(401);
     throw new Error('Invalid email or password');
   }
-};
+});
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, dob } = req.body;
 
   if (!dob) {
@@ -76,7 +76,7 @@ const registerUser = async (req, res) => {
     res.status(400);
     throw new Error('Invalid user data');
   }
-};
+});
 
 // @desc    Get all users
 // @route   GET /api/auth/users
