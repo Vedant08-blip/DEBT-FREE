@@ -16,6 +16,12 @@ const authUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      dob: user.dob,
+      phone: user.phone || '',
+      currency: user.currency || 'INR',
+      netMonthlyIncome: user.netMonthlyIncome !== undefined ? user.netMonthlyIncome : 75000,
+      savingsGoal: user.savingsGoal || 0,
+      selectedAvatar: user.selectedAvatar || '🦉',
       isAdmin: user.isAdmin,
       reminderSettings: user.reminderSettings,
       token: generateToken(user._id),
@@ -56,6 +62,12 @@ const registerUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      dob: user.dob,
+      phone: user.phone || '',
+      currency: user.currency || 'INR',
+      netMonthlyIncome: user.netMonthlyIncome !== undefined ? user.netMonthlyIncome : 75000,
+      savingsGoal: user.savingsGoal || 0,
+      selectedAvatar: user.selectedAvatar || '🦉',
       isAdmin: user.isAdmin,
       reminderSettings: user.reminderSettings,
       token: generateToken(user._id),
@@ -194,4 +206,74 @@ const resetPassword = async (req, res) => {
   res.json({ message: 'Password reset successfully' });
 };
 
-export { authUser, registerUser, getUsers, updateReminderSettings, testReminder, resetPassword };
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.dob = req.body.dob || user.dob;
+    user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
+    user.currency = req.body.currency || user.currency;
+    user.netMonthlyIncome = req.body.netMonthlyIncome !== undefined ? req.body.netMonthlyIncome : user.netMonthlyIncome;
+    user.savingsGoal = req.body.savingsGoal !== undefined ? req.body.savingsGoal : user.savingsGoal;
+    user.selectedAvatar = req.body.selectedAvatar || user.selectedAvatar;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      dob: updatedUser.dob,
+      phone: updatedUser.phone || '',
+      currency: updatedUser.currency || 'INR',
+      netMonthlyIncome: updatedUser.netMonthlyIncome !== undefined ? updatedUser.netMonthlyIncome : 75000,
+      savingsGoal: updatedUser.savingsGoal || 0,
+      selectedAvatar: updatedUser.selectedAvatar || '🦉',
+      isAdmin: updatedUser.isAdmin,
+      reminderSettings: updatedUser.reminderSettings,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Update user password
+// @route   PUT /api/auth/change-password
+// @access  Private
+const updateUserPassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    res.status(400);
+    throw new Error('Current password and new password are required');
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (user && (await user.matchPassword(currentPassword))) {
+    user.password = newPassword;
+    await user.save();
+    res.json({ message: 'Password updated successfully' });
+  } else {
+    res.status(401);
+    throw new Error('Invalid current password');
+  }
+});
+
+export { 
+  authUser, 
+  registerUser, 
+  getUsers, 
+  updateReminderSettings, 
+  testReminder, 
+  resetPassword, 
+  updateUserProfile, 
+  updateUserPassword 
+};

@@ -21,6 +21,26 @@ const userSchema = mongoose.Schema(
       required: true,
       default: '2000-01-01',
     },
+    phone: {
+      type: String,
+      default: '',
+    },
+    currency: {
+      type: String,
+      default: 'INR',
+    },
+    netMonthlyIncome: {
+      type: Number,
+      default: 75000,
+    },
+    savingsGoal: {
+      type: Number,
+      default: 0,
+    },
+    selectedAvatar: {
+      type: String,
+      default: '🦉',
+    },
     isAdmin: {
       type: Boolean,
       required: true,

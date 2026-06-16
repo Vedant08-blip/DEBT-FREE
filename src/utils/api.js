@@ -167,6 +167,31 @@ export const authAPI = {
     }
     return apiCall('/auth/test-reminder', 'POST');
   },
+  updateProfile: (profileData) => {
+    if (isDemoMode()) {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {};
+      const updatedUser = { ...userInfo, ...profileData };
+      localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+      
+      // Sync income preference to net_monthly_income in localStorage if updated
+      if (profileData.netMonthlyIncome !== undefined) {
+        localStorage.setItem('net_monthly_income', profileData.netMonthlyIncome.toString());
+      }
+      
+      return Promise.resolve(updatedUser);
+    }
+    return apiCall('/auth/profile', 'PUT', profileData);
+  },
+  changePassword: (passwordData) => {
+    if (isDemoMode()) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({ message: 'Demo Mode: Mock password change succeeded.' });
+        }, 300);
+      });
+    }
+    return apiCall('/auth/change-password', 'PUT', passwordData);
+  },
 };
 
 export const loanAPI = {
