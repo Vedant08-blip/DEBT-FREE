@@ -15,14 +15,6 @@ export default function MyLoans() {
   const [editingLoan, setEditingLoan] = useState(null);
   const [selectedAmortizationLoan, setSelectedAmortizationLoan] = useState(null);
 
-  const fetchLoans = async () => {
-    try {
-      const data = await loanAPI.getLoans();
-      setLoans(data);
-    } catch (err) {
-      toast.error(err.message || 'Failed to fetch loans');
-    }
-  };
 
   useEffect(() => {
     let isMounted = true;

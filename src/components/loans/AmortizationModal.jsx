@@ -9,14 +9,18 @@ import { Download, Info, Clock, BadgeAlert, Shield } from 'lucide-react';
 export default function AmortizationModal({ isOpen, onClose, loan }) {
   const [extraPayment, setExtraPayment] = useState(0);
 
+  const outstanding = loan?.outstanding || 0;
+  const interestRate = loan?.interestRate || 0;
+  const emiAmount = loan?.emiAmount || 0;
+
   // Calculate Amortization schedule dynamically
   const schedule = useMemo(() => {
     if (!loan) return { table: [], totalInterest: 0, monthsLeft: 0 };
 
     const table = [];
-    let balance = loan.outstanding;
-    const monthlyRate = (loan.interestRate / 100) / 12;
-    const emi = loan.emiAmount;
+    let balance = outstanding;
+    const monthlyRate = (interestRate / 100) / 12;
+    const emi = emiAmount;
     const payment = emi + extraPayment;
     let month = 1;
     let totalInterest = 0;
@@ -50,14 +54,14 @@ export default function AmortizationModal({ isOpen, onClose, loan }) {
     }
 
     return { table, totalInterest, monthsLeft: month - 1 };
-  }, [loan, extraPayment]);
+  }, [outstanding, interestRate, emiAmount, extraPayment]);
 
   const baselineSchedule = useMemo(() => {
     if (!loan) return { monthsLeft: 0, totalInterest: 0 };
     
-    let balance = loan.outstanding;
-    const monthlyRate = (loan.interestRate / 100) / 12;
-    const emi = loan.emiAmount;
+    let balance = outstanding;
+    const monthlyRate = (interestRate / 100) / 12;
+    const emi = emiAmount;
     let month = 1;
     let totalInterest = 0;
 
@@ -70,7 +74,7 @@ export default function AmortizationModal({ isOpen, onClose, loan }) {
       month++;
     }
     return { monthsLeft: month - 1, totalInterest };
-  }, [loan]);
+  }, [outstanding, interestRate, emiAmount]);
 
   // Export Amortization Table to CSV
   const handleExportCSV = () => {
