@@ -8,6 +8,7 @@ import BarChart from '../components/charts/BarChart';
 import ProgressRing from '../components/charts/ProgressRing';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import ProgressHeatmap from '../components/ui/ProgressHeatmap';
 import { formatCurrency } from '../utils/formatCurrency';
 import { loanAPI } from '../utils/api';
 import { Plus, Award, Coins, Download, Lock, CheckCircle, ShieldCheck, Printer, AlertTriangle } from 'lucide-react';
@@ -278,6 +279,16 @@ export default function Dashboard() {
             loansCount={loans.length}
             debtFreeDate={formattedDate}
           />
+        </motion.div>
+
+        {/* Payoff Consistency Heatmap */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mb-8"
+        >
+          <ProgressHeatmap loans={loans} />
         </motion.div>
 
         {/* DTI Card and Achievements Panel */}
