@@ -12,7 +12,7 @@ import ParticleCanvas from '../components/ui/ParticleCanvas';
 
 export default function Register() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', dob: '' });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,6 +21,7 @@ export default function Register() {
     const newErrors = {};
     if (!formData.name) newErrors.name = 'Full name is required';
     if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.dob) newErrors.dob = 'Date of birth is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
@@ -33,8 +34,8 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      const { name, email, password } = formData;
-      const data = await authAPI.register({ name, email, password });
+      const { name, email, password, dob } = formData;
+      const data = await authAPI.register({ name, email, password, dob });
       localStorage.setItem('userInfo', JSON.stringify(data));
       setIsLoading(false);
       toast.success('Account created successfully!');

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, ArrowRight, Menu, X, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Menu, X, ShieldCheck, Calendar } from 'lucide-react';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 import Input from '../ui/Input';
@@ -11,13 +11,18 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Form States
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [signupData, setSignupData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [signupData, setSignupData] = useState({ name: '', email: '', password: '', confirmPassword: '', dob: '' });
+  const [forgotData, setForgotData] = useState({ email: '', dob: '', password: '', confirmPassword: '' });
+  
   const [loginErrors, setLoginErrors] = useState({});
   const [signupErrors, setSignupErrors] = useState({});
+  const [forgotErrors, setForgotErrors] = useState({});
+  
   const [isLoading, setIsLoading] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -78,6 +83,7 @@ export default function Navbar() {
     const newErrors = {};
     if (!signupData.name) newErrors.name = 'Full name is required';
     if (!signupData.email) newErrors.email = 'Email is required';
+    if (!signupData.dob) newErrors.dob = 'Date of birth is required';
     if (!signupData.password) newErrors.password = 'Password is required';
     if (signupData.password !== signupData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
@@ -90,8 +96,8 @@ export default function Navbar() {
 
     setIsLoading(true);
     try {
-      const { name, email, password } = signupData;
-      const data = await authAPI.register({ name, email, password });
+      const { name, email, password, dob } = signupData;
+      const data = await authAPI.register({ name, email, password, dob });
       localStorage.setItem('userInfo', JSON.stringify(data));
       setIsLoading(false);
       setIsSignupOpen(false);
@@ -102,6 +108,36 @@ export default function Navbar() {
       setIsLoading(false);
       toast.error(err.message || 'Failed to register');
       setSignupErrors({ server: err.message });
+    }
+  };
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    const newErrors = {};
+    if (!forgotData.email) newErrors.email = 'Email is required';
+    if (!forgotData.dob) newErrors.dob = 'Date of birth is required';
+    if (!forgotData.password) newErrors.password = 'New password is required';
+    if (forgotData.password !== forgotData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setForgotErrors(newErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { email, dob, password } = forgotData;
+      await authAPI.resetPassword({ email, dob, newPassword: password });
+      setIsLoading(false);
+      setIsForgotPasswordOpen(false);
+      setIsLoginOpen(true);
+      toast.success('Password reset successfully! Please log in.');
+    } catch (err) {
+      setIsLoading(false);
+      toast.error(err.message || 'Password reset failed');
+      setForgotErrors({ server: err.message });
     }
   };
 
@@ -315,7 +351,16 @@ export default function Navbar() {
                 <input type="checkbox" className="rounded text-primary focus:ring-primary w-4 h-4 cursor-pointer" />
                 <span className="text-sm text-text-muted group-hover:text-text-primary transition-colors">Remember me</span>
               </label>
-              <a href="#" className="text-sm font-medium text-primary hover:text-accent transition-colors">Forgot password?</a>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setIsLoginOpen(false);
+                  setIsForgotPasswordOpen(true);
+                }} 
+                className="text-sm font-medium text-primary hover:text-accent transition-colors bg-transparent border-0 cursor-pointer"
+              >
+                Forgot password?
+              </button>
             </div>
             <Button type="submit" className="w-full h-12 text-base shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group" isLoading={isLoading}>
               Log in to Dashboard
@@ -399,6 +444,17 @@ export default function Navbar() {
               }}
               error={signupErrors.email}
             />
+            <Input
+              label="Date of Birth"
+              type="date"
+              icon={Calendar}
+              value={signupData.dob}
+              onChange={(e) => {
+                setSignupData({ ...signupData, dob: e.target.value });
+                setSignupErrors({ ...signupErrors, dob: '' });
+              }}
+              error={signupErrors.dob}
+            />
             <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Password"
@@ -446,6 +502,99 @@ export default function Navbar() {
               }}
             >
               Log in instead
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Forgot Password Modal */}
+      <Modal isOpen={isForgotPasswordOpen} onClose={() => setIsForgotPasswordOpen(false)}>
+        <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 px-8 py-10 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-white/20 rounded-full blur-3xl"></div>
+
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-4 ring-1 ring-white/20 shadow-xl">
+              <img src="/logo.png" alt="DebtFree" className="w-10 h-10 object-contain drop-shadow-md" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight text-white mb-2">Reset Password</h2>
+            <p className="text-blue-100 text-sm font-medium max-w-xs mx-auto">Verify your details to secure your account.</p>
+          </div>
+        </div>
+
+        <div className="px-8 py-8 bg-card border-t border-border">
+          <form onSubmit={handleForgotSubmit} className="space-y-4">
+            <Input
+              label="Email Address"
+              type="email"
+              icon={Mail}
+              placeholder="you@example.com"
+              value={forgotData.email}
+              onChange={(e) => {
+                setForgotData({ ...forgotData, email: e.target.value });
+                setForgotErrors({ ...forgotErrors, email: '' });
+              }}
+              error={forgotErrors.email}
+            />
+            <Input
+              label="Date of Birth"
+              type="date"
+              icon={Calendar}
+              value={forgotData.dob}
+              onChange={(e) => {
+                setForgotData({ ...forgotData, dob: e.target.value });
+                setForgotErrors({ ...forgotErrors, dob: '' });
+              }}
+              error={forgotErrors.dob}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="New Password"
+                type="password"
+                icon={Lock}
+                placeholder="••••••••"
+                value={forgotData.password}
+                onChange={(e) => {
+                  setForgotData({ ...forgotData, password: e.target.value });
+                  setForgotErrors({ ...forgotErrors, password: '' });
+                }}
+                error={forgotErrors.password}
+              />
+              <Input
+                label="Confirm New"
+                type="password"
+                icon={Lock}
+                placeholder="••••••••"
+                value={forgotData.confirmPassword}
+                onChange={(e) => {
+                  setForgotData({ ...forgotData, confirmPassword: e.target.value });
+                  setForgotErrors({ ...forgotErrors, confirmPassword: '' });
+                }}
+                error={forgotErrors.confirmPassword}
+              />
+            </div>
+            {forgotErrors.server && <p className="text-xs text-red-400 mt-1">{forgotErrors.server}</p>}
+            <Button type="submit" className="w-full h-12 text-base mt-2 shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group" isLoading={isLoading}>
+              Reset Password
+              {!isLoading && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+            </Button>
+          </form>
+
+          <div className="mt-8 text-center text-sm text-text-muted relative">
+            <div className="absolute inset-x-0 top-1/2 h-px bg-border -z-10"></div>
+            <span className="bg-card px-4 text-text-muted font-medium">Remembered your password?</span>
+          </div>
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              className="text-sm font-semibold text-primary hover:text-accent transition-colors"
+              onClick={() => {
+                setIsForgotPasswordOpen(false);
+                setIsLoginOpen(true);
+              }}
+            >
+              Go back to login
             </button>
           </div>
         </div>
