@@ -1,5 +1,4 @@
 import cron from 'node-cron';
-import nodemailer from 'nodemailer';
 import User from '../models/User.js';
 import Loan from '../models/Loan.js';
 
@@ -15,7 +14,7 @@ const sendReminders = async () => {
     const users = await User.find({ 'reminderSettings.globalEnabled': true });
     
     for (const user of users) {
-      const { channel, daysBefore } = user.reminderSettings;
+      const { daysBefore } = user.reminderSettings;
       
       let targetDate = currentDay + daysBefore;
       if (targetDate > 31) targetDate -= 31;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Menu, X, ShieldCheck, Calendar } from 'lucide-react';
 import Button from '../ui/Button';
@@ -24,16 +24,22 @@ export default function Navbar() {
   const [forgotErrors, setForgotErrors] = useState({});
   
   const [isLoading, setIsLoading] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (userInfo) {
-      setIsAuth(true);
-      setIsAdmin(userInfo.isAdmin);
+  const [isAuth, setIsAuth] = useState(() => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      return !!userInfo;
+    } catch {
+      return false;
     }
-  }, []);
+  });
+  const [isAdmin, setIsAdmin] = useState(() => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      return !!(userInfo && userInfo.isAdmin);
+    } catch {
+      return false;
+    }
+  });
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +59,7 @@ export default function Navbar() {
       setIsLoading(false);
       setIsLoginOpen(false);
       setIsAuth(true);
+      setIsAdmin(data.isAdmin);
       toast.success('Successfully logged in!');
       navigate('/dashboard');
     } catch (err) {
@@ -70,9 +77,10 @@ export default function Navbar() {
       setIsLoading(false);
       setIsLoginOpen(false);
       setIsAuth(true);
+      setIsAdmin(data.isAdmin);
       toast.success('Successfully entered Demo Mode!');
       navigate('/dashboard');
-    } catch (err) {
+    } catch {
       setIsLoading(false);
       toast.error('Failed to access demo environment');
     }
@@ -102,6 +110,7 @@ export default function Navbar() {
       setIsLoading(false);
       setIsSignupOpen(false);
       setIsAuth(true);
+      setIsAdmin(data.isAdmin);
       toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (err) {
