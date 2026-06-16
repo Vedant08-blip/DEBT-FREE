@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Modal from '../ui/Modal';
 import Slider from '../ui/Slider';
 import Button from '../ui/Button';
@@ -14,7 +14,7 @@ export default function AmortizationModal({ isOpen, onClose, loan }) {
   const emiAmount = loan?.emiAmount || 0;
 
   // Calculate Amortization schedule dynamically
-  const schedule = useMemo(() => {
+  const getSchedule = () => {
     if (!loan) return { table: [], totalInterest: 0, monthsLeft: 0 };
 
     const table = [];
@@ -54,9 +54,10 @@ export default function AmortizationModal({ isOpen, onClose, loan }) {
     }
 
     return { table, totalInterest, monthsLeft: month - 1 };
-  }, [outstanding, interestRate, emiAmount, extraPayment]);
+  };
+  const schedule = getSchedule();
 
-  const baselineSchedule = useMemo(() => {
+  const getBaselineSchedule = () => {
     if (!loan) return { monthsLeft: 0, totalInterest: 0 };
     
     let balance = outstanding;
@@ -74,7 +75,8 @@ export default function AmortizationModal({ isOpen, onClose, loan }) {
       month++;
     }
     return { monthsLeft: month - 1, totalInterest };
-  }, [outstanding, interestRate, emiAmount]);
+  };
+  const baselineSchedule = getBaselineSchedule();
 
   // Export Amortization Table to CSV
   const handleExportCSV = () => {
