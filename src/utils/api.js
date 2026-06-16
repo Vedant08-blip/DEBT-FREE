@@ -267,3 +267,48 @@ export const loanAPI = {
   },
 };
 
+export const analyticsAPI = {
+  getSummary: () => {
+    if (isDemoMode()) {
+      const loans = getDemoLoans();
+      const totalDebt = loans.reduce((acc, loan) => acc + loan.outstanding, 0);
+      const monthlyEMI = loans.reduce((acc, loan) => acc + loan.emiAmount, 0);
+      const monthlyIncome = 150000;
+      const dtiRatio = (monthlyEMI / monthlyIncome) * 100;
+      
+      let healthScore = 100;
+      if (dtiRatio > 36) healthScore -= Math.min((dtiRatio - 36) * 0.5, 30);
+      
+      return Promise.resolve({
+        totalDebt,
+        monthlyEMI,
+        totalPrincipal: loans.reduce((acc, loan) => acc + loan.principal, 0),
+        totalInterestPaid: 125000,
+        monthlyIncome,
+        dtiRatio: Math.round(dtiRatio * 100) / 100,
+        healthScore: Math.round(healthScore),
+        loanCount: loans.length,
+        debtByType: loans.map(loan => ({
+          name: loan.name,
+          outstanding: loan.outstanding,
+          interestRate: loan.interestRate
+        }))
+      });
+    }
+    return apiCall('/analytics/summary');
+  },
+  getExpenses: () => {
+    if (isDemoMode()) {
+      return Promise.resolve({
+        housing: 25000,
+        food: 15000,
+        transportation: 8000,
+        utilities: 5000,
+        entertainment: 3000,
+        other: 5000
+      });
+    }
+    return apiCall('/analytics/expenses');
+  },
+};
+
