@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import Card from './Card';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Calendar, Zap, Sparkles, TrendingUp, Info } from 'lucide-react';

@@ -29,7 +29,9 @@ export default function GlitchText({ text, className = "" }) {
     } else {
       clearInterval(intervalRef.current);
       // We wrap this in a check to avoid unnecessary state updates if already matches
-      setDisplay((prev) => (prev === text ? prev : text));
+      Promise.resolve().then(() => {
+        setDisplay((prev) => (prev === text ? prev : text));
+      });
     }
     return () => clearInterval(intervalRef.current);
   }, [hovering, text]);

@@ -83,7 +83,7 @@ export default function Login() {
       setIsLoading(false);
       toast.success('Successfully entered Demo Mode!');
       navigate('/dashboard');
-    } catch (err) {
+    } catch {
       setIsLoading(false);
       toast.error('Failed to access demo environment');
     }
