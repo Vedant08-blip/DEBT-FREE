@@ -16,7 +16,7 @@ const calculatePayoff = (loans, extraMonthlyBudget, sortBy) => {
 
   // 1. Sort loans based on strategy
   const activeLoans = [...loans].sort((a, b) => {
-    if (sortBy === 'interest') return b.interest - a.interest; // Avalanche
+    if (sortBy === 'interest') return b.interestRate - a.interestRate; // Avalanche
     return a.outstanding - b.outstanding; // Snowball
   }).map(l => ({ ...l, currentBalance: l.outstanding }));
 
@@ -34,7 +34,7 @@ const calculatePayoff = (loans, extraMonthlyBudget, sortBy) => {
     activeLoans.forEach(loan => {
       if (loan.currentBalance > 0) {
         // Calculate monthly interest
-        const monthlyInterest = (loan.currentBalance * (loan.interest / 100)) / 12;
+        const monthlyInterest = (loan.currentBalance * (loan.interestRate / 100)) / 12;
         monthlyInterestPaid += monthlyInterest;
         
         // Pay EMI (minimum payment)
@@ -210,6 +210,59 @@ export default function Strategy() {
           </Card>
         </motion.div>
       </div>
+
+      {/* Refinancing Recommendations Section */}
+      {loans.some(l => l.interestRate > 12) && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <Card className="border-2 border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent backdrop-blur-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-emerald-400" /> Refinancing & Debt Consolidation Opportunity
+            </h3>
+            <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-3xl">
+              We identified that some of your active debts carry high interest rates (above 12%). 
+              Consolidating them into a single lower-interest personal loan could substantially speed up your payoff journey.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-950/60 border border-white/5 p-4 rounded-xl">
+                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">High-Interest Balances</p>
+                <p className="text-xl font-bold text-white">
+                  {formatCurrency(loans.filter(l => l.interestRate > 12).reduce((acc, l) => acc + l.outstanding, 0))}
+                </p>
+                <p className="text-[10px] text-slate-400 mt-1">Across {loans.filter(l => l.interestRate > 12).length} high-interest accounts</p>
+              </div>
+
+              <div className="bg-slate-950/60 border border-white/5 p-4 rounded-xl">
+                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Average Weighted Rate</p>
+                <p className="text-xl font-bold text-rose-400">
+                  {(
+                    loans.filter(l => l.interestRate > 12).reduce((acc, l) => acc + (l.interestRate * l.outstanding), 0) /
+                    loans.filter(l => l.interestRate > 12).reduce((acc, l) => acc + l.outstanding, 0)
+                  ).toFixed(2)}%
+                </p>
+                <p className="text-[10px] text-slate-400 mt-1">VS standard personal loan rates (~10%)</p>
+              </div>
+
+              <div className="bg-slate-950/60 border border-white/5 p-4 rounded-xl border-emerald-500/10">
+                <p className="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-1">Est. Yearly Savings</p>
+                <p className="text-xl font-bold text-emerald-400">
+                  {formatCurrency(
+                    (loans.filter(l => l.interestRate > 12).reduce((acc, l) => acc + l.outstanding, 0) * 
+                    ((loans.filter(l => l.interestRate > 12).reduce((acc, l) => acc + (l.interestRate * l.outstanding), 0) /
+                    loans.filter(l => l.interestRate > 12).reduce((acc, l) => acc + l.outstanding, 0)) - 10)) / 100
+                  )}
+                </p>
+                <p className="text-[10px] text-slate-400 mt-1">By refinancing at a consolidated 10% rate</p>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
+      )}
 
       <div className="h-96">
         <LineChart data={avalanche.timeline} title="Estimated Payoff Timeline (Avalanche)" />
