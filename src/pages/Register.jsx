@@ -105,6 +105,20 @@ export default function Register() {
               />
               {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
             </div>
+
+            <div className="space-y-1 text-left">
+              <label className="text-xs font-semibold text-slate-300 uppercase tracking-widest">Date of Birth</label>
+              <input
+                type="date"
+                value={formData.dob}
+                onChange={(e) => {
+                  setFormData({...formData, dob: e.target.value});
+                  setErrors({...errors, dob: ''});
+                }}
+                className={`w-full bg-slate-900/60 border ${errors.dob ? 'border-red-500/50' : 'border-white/10'} rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all`}
+              />
+              {errors.dob && <p className="text-xs text-red-400 mt-1">{errors.dob}</p>}
+            </div>
             
             <div className="space-y-1 text-left">
               <label className="text-xs font-semibold text-slate-300 uppercase tracking-widest">Password</label>
