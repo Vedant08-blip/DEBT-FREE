@@ -30,17 +30,20 @@ export default function Dashboard() {
   const [isEditingIncome, setIsEditingIncome] = useState(false);
   const [tempIncome, setTempIncome] = useState(income);
   
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  
+  const fetchLoans = async () => {
+    try {
+      const data = await loanAPI.getLoans();
+      setLoans(data);
+    } catch (err) {
+      toast.error(err.message || 'Failed to fetch loans');
+    }
+  };
+
   useEffect(() => {
-    const fetchLoans = async () => {
-      try {
-        const data = await loanAPI.getLoans();
-        setLoans(data);
-      } catch (err) {
-        toast.error(err.message || 'Failed to fetch loans');
-      }
-    };
     fetchLoans();
-  }, []);
+  }, [refreshTrigger]);
 
   const totalDebt = loans.reduce((acc, loan) => acc + loan.outstanding, 0);
   const monthlyEMI = loans.reduce((acc, loan) => acc + loan.emiAmount, 0);
@@ -319,7 +322,7 @@ export default function Dashboard() {
           transition={{ duration: 0.5, delay: 0.15 }}
           className="mb-8"
         >
-          <ProgressHeatmap loans={loans} />
+          <ProgressHeatmap loans={loans} onRefresh={() => setRefreshTrigger(prev => prev + 1)} />
         </motion.div>
 
         {/* DTI Card and Achievements Panel */}
