@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Card from './Card';
 import Modal from './Modal';
 import Button from './Button';
@@ -19,40 +19,73 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-// Load windfalls from localStorage or initialize defaults
-const getStoredWindfalls = () => {
-  const stored = localStorage.getItem('custom_windfalls');
-  if (!stored) {
-    const defaults = [
-      { id: 'w-mock-1', date: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], amount: 35000, desc: 'Bonus Windfall Allocation', loanId: 'demo-loan-1' },
-      { id: 'w-mock-2', date: new Date(Date.now() - 112 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], amount: 20000, desc: 'Tax Refund Lump Sum', loanId: 'demo-loan-3' },
-      { id: 'w-mock-3', date: new Date(Date.now() - 230 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], amount: 50000, desc: 'Freelance Side Hustle Payoff', loanId: 'demo-loan-2' },
-      { id: 'w-mock-4', date: new Date(Date.now() - 310 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], amount: 15000, desc: 'Festive Season Extra Payment', loanId: 'demo-loan-4' }
-    ];
-    localStorage.setItem('custom_windfalls', JSON.stringify(defaults));
-    return defaults;
-  }
-  return JSON.parse(stored);
+// Helper to format a local Date object into a YYYY-MM-DD string timezone-safely
+const getLocalDateString = (date) => {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
 };
 
 export default function ProgressHeatmap({ loans = [], onRefresh }) {
   const [selectedLoanFilter, setSelectedLoanFilter] = useState('all');
-  const [windfalls, setWindfalls] = useState(() => getStoredWindfalls());
+  const [windfalls, setWindfalls] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAnalyticsPanel, setShowAnalyticsPanel] = useState(false);
   const [hoveredLegend, setHoveredLegend] = useState(null);
 
   // Form State
-  const [newWindfallLoanId, setNewWindfallLoanId] = useState(loans[0]?._id || loans[0]?.id || '');
+  const [newWindfallLoanId, setNewWindfallLoanId] = useState('');
   const [newWindfallAmount, setNewWindfallAmount] = useState('');
   const [newWindfallDesc, setNewWindfallDesc] = useState('');
-  const [newWindfallDate, setNewWindfallDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newWindfallDate, setNewWindfallDate] = useState(getLocalDateString(new Date()));
 
-  // Sync loan selection
-  useMemo(() => {
-    if (loans.length > 0 && !newWindfallLoanId) {
-      setNewWindfallLoanId(loans[0]._id || loans[0].id);
+  // 1. Sync Mock Windfalls & ensure they map to valid active loan IDs
+  useEffect(() => {
+    const stored = localStorage.getItem('custom_windfalls');
+    if (loans.length > 0) {
+      if (!stored) {
+        // Initialize defaults with actual loan IDs
+        const defaults = [
+          { id: 'w-mock-1', date: getLocalDateString(new Date(Date.now() - 45 * 24 * 60 * 60 * 1000)), amount: 35000, desc: 'Bonus Windfall Allocation', loanId: loans[0]?._id || loans[0]?.id },
+          { id: 'w-mock-2', date: getLocalDateString(new Date(Date.now() - 112 * 24 * 60 * 60 * 1000)), amount: 20000, desc: 'Tax Refund Lump Sum', loanId: loans[1]?._id || loans[1]?.id || loans[0]?._id || loans[0]?.id },
+          { id: 'w-mock-3', date: getLocalDateString(new Date(Date.now() - 230 * 24 * 60 * 60 * 1000)), amount: 50000, desc: 'Freelance Side Hustle Payoff', loanId: loans[2]?._id || loans[2]?.id || loans[0]?._id || loans[0]?.id },
+          { id: 'w-mock-4', date: getLocalDateString(new Date(Date.now() - 310 * 24 * 60 * 60 * 1000)), amount: 15000, desc: 'Festive Season Extra Payment', loanId: loans[3]?._id || loans[3]?.id || loans[0]?._id || loans[0]?.id }
+        ];
+        localStorage.setItem('custom_windfalls', JSON.stringify(defaults));
+        setWindfalls(defaults);
+      } else {
+        const parsed = JSON.parse(stored);
+        let changed = false;
+        const updated = parsed.map((w, index) => {
+          const loanExists = loans.some(l => (l._id || l.id) === w.loanId);
+          if (!loanExists) {
+            // Re-map windfall to a valid active loan ID
+            const targetLoan = loans[index % loans.length];
+            w.loanId = targetLoan?._id || targetLoan?.id;
+            changed = true;
+          }
+          return w;
+        });
+        if (changed) {
+          localStorage.setItem('custom_windfalls', JSON.stringify(updated));
+        }
+        setWindfalls(updated);
+      }
+    } else {
+      if (stored) {
+        setWindfalls(JSON.parse(stored));
+      }
+    }
+  }, [loans]);
+
+  // 2. Sync selected windfall loan form choice when loans load or change
+  useEffect(() => {
+    if (loans.length > 0) {
+      if (!newWindfallLoanId || !loans.some(l => (l._id || l.id) === newWindfallLoanId)) {
+        setNewWindfallLoanId(loans[0]._id || loans[0].id);
+      }
     }
   }, [loans, newWindfallLoanId]);
 
@@ -92,7 +125,8 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
             return;
           }
 
-          if (cellDate.getDate() === Number(loan.emiDate)) {
+          const emiDateNum = Number(loan.emiDate);
+          if (!isNaN(emiDateNum) && cellDate.getDate() === emiDateNum) {
             const storageKey = `emi_paid_${cellDate.getFullYear()}_${cellDate.getMonth()}_${loanId}`;
             const isPaidInStorage = localStorage.getItem(storageKey) === 'true';
 
@@ -111,7 +145,7 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
         });
 
         // 2. Process Windfalls
-        const cellDateString = cellDate.toISOString().split('T')[0];
+        const cellDateString = getLocalDateString(cellDate);
         windfalls.forEach(w => {
           if (w.date === cellDateString) {
             if (selectedLoanFilter !== 'all' && selectedLoanFilter !== w.loanId) {
@@ -128,7 +162,7 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
               value: w.amount,
               loanId: w.loanId,
               loanName: targetLoan?.name || 'Loan Payoff',
-              isCustom: !w.id?.startsWith('w-mock-')
+              isCustom: !w.id || !w.id.startsWith('w-mock-')
             });
           }
         });
@@ -314,13 +348,13 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
 
   // Revert/Delete Windfall
   const handleDeleteWindfall = (id, amount, loanId) => {
-    const selectedLoan = loans.find(l => (l._id || l.id) === loanId);
-    if (!selectedLoan) {
-      toast.error('Unable to find associated loan.');
-      return;
-    }
-
-    try {
+    const isCustom = !id || !id.startsWith('w-mock-');
+    if (isCustom) {
+      const selectedLoan = loans.find(l => (l._id || l.id) === loanId);
+      if (!selectedLoan) {
+        toast.error('Unable to find associated loan.');
+        return;
+      }
       const restoredOutstanding = selectedLoan.outstanding + amount;
       loanAPI.updateLoan(loanId, { outstanding: restoredOutstanding }).then(() => {
         const filtered = windfalls.filter(w => w.id !== id);
@@ -332,8 +366,12 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
           onRefresh();
         }
       });
-    } catch {
-      toast.error('Failed to reverse transaction.');
+    } else {
+      const filtered = windfalls.filter(w => w.id !== id);
+      setWindfalls(filtered);
+      localStorage.setItem('custom_windfalls', JSON.stringify(filtered));
+      toast.success('Mock windfall removed.');
+      setSelectedCell(null);
     }
   };
 
@@ -678,7 +716,7 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
               <p>No transactions registered on this calendar date.</p>
               <Button 
                 onClick={() => {
-                  setNewWindfallDate(selectedCell.date.toISOString().split('T')[0]);
+                  setNewWindfallDate(getLocalDateString(selectedCell.date));
                   setShowAddModal(true);
                 }}
                 size="sm"
@@ -697,7 +735,7 @@ export default function ProgressHeatmap({ loans = [], onRefresh }) {
                 >
                   <div className="flex items-center gap-3">
                     <div className={`p-2.5 rounded-lg ${detail.type === 'Windfall' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}`}>
-                      {detail.type === 'Windfall' ? <Sparkles className="w-4 h-4 animate-spin-slow" /> : <Calendar className="w-4 h-4" />}
+                      {detail.type === 'Windfall' ? <Sparkles className="w-4 h-4" /> : <Calendar className="w-4 h-4" />}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
