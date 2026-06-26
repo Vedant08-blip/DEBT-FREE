@@ -4,9 +4,7 @@ import PageWrapper from '../components/layout/PageWrapper';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import BarChart from '../components/charts/BarChart';
-import LineChart from '../components/charts/LineChart';
 import DonutChart from '../components/charts/DonutChart';
-import ProgressRing from '../components/charts/ProgressRing';
 import { formatCurrency } from '../utils/formatCurrency';
 import { loanAPI } from '../utils/api';
 import { TrendingUp, PieChart, Target, Zap, AlertCircle, Award } from 'lucide-react';
@@ -27,10 +25,21 @@ export default function FinancialAnalytics() {
   });
   const [expenses] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('monthly_expenses')) || {};
+      const storedExpenses = JSON.parse(localStorage.getItem('monthly_expenses'));
+      if (storedExpenses && Object.keys(storedExpenses).length > 0) {
+        return storedExpenses;
+      }
     } catch {
-      return {};
+      // Ignore errors
     }
+    return {
+      housing: 25000,
+      food: 15000,
+      transportation: 8000,
+      utilities: 5000,
+      entertainment: 3000,
+      other: 5000
+    };
   });
   const [isLoadingLoans, setIsLoadingLoans] = useState(true);
 
@@ -299,10 +308,13 @@ export default function FinancialAnalytics() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Monthly Cash Flow</h3>
-              <BarChart data={cashFlowData} />
-            </Card>
+            <BarChart 
+              data={cashFlowData} 
+              title="Monthly Cash Flow"
+              bars={[
+                { dataKey: 'value', name: 'Monthly Flow', fill: '#3B82F6' }
+              ]}
+            />
           </motion.div>
 
           {/* Debt Distribution */}
@@ -311,16 +323,7 @@ export default function FinancialAnalytics() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Debt Distribution</h3>
-              {debtByType.length > 0 ? (
-                <DonutChart data={debtByType} />
-              ) : (
-                <div className="h-64 flex items-center justify-center text-slate-400">
-                  No debt data available
-                </div>
-              )}
-            </Card>
+            <DonutChart data={debtByType} title="Debt Distribution" />
           </motion.div>
         </div>
 
@@ -331,10 +334,14 @@ export default function FinancialAnalytics() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Projected 6-Month Payoff Progress</h3>
-              <BarChart data={projectedPayoffData} />
-            </Card>
+            <BarChart 
+              data={projectedPayoffData} 
+              title="Projected 6-Month Payoff Progress"
+              bars={[
+                { dataKey: 'current', name: 'Current Balance', fill: '#3B82F6' },
+                { dataKey: 'projected', name: 'Projected Balance (6 Mo)', fill: '#10B981' }
+              ]}
+            />
           </motion.div>
         )}
 

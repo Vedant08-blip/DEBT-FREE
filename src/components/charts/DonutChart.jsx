@@ -7,8 +7,11 @@ const COLORS = ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
 export default function DonutChart({ data, title }) {
   if (!data || data.length === 0) {
     return (
-      <Card className="flex flex-col items-center justify-center h-80">
-        <p className="text-text-muted">No data available</p>
+      <Card className="flex flex-col h-80 justify-center">
+        {title && <h3 className="text-lg font-semibold text-text-primary mb-4">{title}</h3>}
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-text-muted">No data available</p>
+        </div>
       </Card>
     );
   }
@@ -16,7 +19,7 @@ export default function DonutChart({ data, title }) {
   return (
     <Card className="flex flex-col h-full">
       {title && <h3 className="text-lg font-semibold text-text-primary mb-4">{title}</h3>}
-      <div className="flex-1 min-h-[300px]">
+      <div className="flex-1 h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
